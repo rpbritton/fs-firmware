@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-#include <string.h>
 #include <stdio.h>
 #include <stdbool.h>
 
@@ -24,6 +23,9 @@
 #include "sys_power_mgr.h"
 #include "hw_gpio.h"
 
+#include "config.h"
+
+#include "inputs/scanner.h"
 #include "outputs/blinky.h"
 
 static void system_init(void *data);
@@ -49,6 +51,7 @@ static void system_init(void *data)
 
 	pm_system_init(NULL);
 	blinky_init();
+	scanner_init(&SCANNER_CONFIG);
 
 	resource_init();
 
@@ -62,6 +65,7 @@ static void system_init(void *data)
 #endif
 
 	blinky_run();
+	scanner_run();
 
 	vTaskDelete(NULL);
 }

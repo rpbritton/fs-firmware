@@ -36,12 +36,17 @@
 #define OS_FREERTOS
 #define configTOTAL_HEAP_SIZE           14000
 
-// hardware adapter config
+// disable default adapters
 #define dg_configFLASH_ADAPTER          (0)
 #define dg_configNVMS_ADAPTER           (0)
 #define dg_configNVMS_VES               (0)
 #define dg_configRF_ADAPTER             (0)
 #define dg_configCRYPTO_ADAPTER         (0)
+
+// enable keyboard scanner
+#define dg_configKEYBOARD_SCANNER_ADAPTER 	(1)
+#define dg_configUSE_HW_KEYBOARD_SCANNER  	(1)
+#define CONFIG_KEYBOARD_SCANNER_DEGHOSTING  (0)
 
 #include "bsp_defaults.h"
 #include "bsp_memory_layout.h"
