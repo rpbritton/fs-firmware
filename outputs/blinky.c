@@ -26,9 +26,13 @@ static TaskHandle_t blinky_handle;
 
 void blinky_init()
 {
-	breath_config config =
-	{ .dc_min = 239, .dc_max = 240, .dc_step = 1, .freq_div = 255, .polarity =
-			HW_BREATH_PWM_POL_POS };
+	breath_config config = {
+	    .dc_min = 239,
+	    .dc_max = 240,
+	    .dc_step = 1,
+	    .freq_div = 255,
+	    .polarity = HW_BREATH_PWM_POL_POS,
+	};
 
 	hw_breath_init(&config);
 
@@ -44,8 +48,9 @@ void blinky_run()
 		return;
 
 	xTaskCreate(blinky_task, "print_task",
-			configMINIMAL_STACK_SIZE * sizeof(StackType_t), NULL, 1,
-			&blinky_handle);
+	            configMINIMAL_STACK_SIZE * sizeof(StackType_t),
+	            NULL, 1,
+	            &blinky_handle);
 }
 
 void blinky_stop()

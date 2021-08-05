@@ -17,19 +17,12 @@
 #ifndef INPUTS_SCANNER_H_
 #define INPUTS_SCANNER_H_
 
-#include "osal.h"
+#if FS_USE_SCANNER
 
-typedef struct ScannerConfig
-{
-	const uint8_t num_columns;
-	const uint8_t *columns;
-	const uint8_t num_rows;
-	const uint8_t *rows;
-	const uint8_t *events;
-} ScannerConfig;
-
-void scanner_init(const ScannerConfig *config);
+void scanner_init();
 void scanner_run();
 void scanner_stop();
+
+#endif /* FS_USE_SCANNER */
 
 #endif /* INPUTS_SCANNER_H_ */

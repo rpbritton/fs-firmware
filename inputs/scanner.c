@@ -14,60 +14,62 @@
  * limitations under the License.
  */
 
+#if FS_USE_SCANNER
+
 #include "scanner.h"
 
 #include <stdio.h>
 
+#include "osal.h"
 #include "ad_keyboard_scanner.h"
 
 static void scanner_cb(AD_KBSCN_EVENT event, char key);
 
-static ad_kbscn_config kbscn;
+static const uint8_t rows[FS_SCANNER_NUM_ROWS] = FS_SCANNER_ROWS;
+static const uint8_t columns[FS_SCANNER_NUM_COLUMNS] = FS_SCANNER_COLUMNS;
 
-void scanner_init(const ScannerConfig *config)
+static ad_kbscn_pin_setup kbscn_rows[FS_SCANNER_NUM_ROWS];
+static ad_kbscn_pin_setup kbscn_columns[FS_SCANNER_NUM_COLUMNS];
+
+static const char kbscn_matrix[FS_SCANNER_NUM_ROWS * FS_SCANNER_NUM_COLUMNS] =
+FS_SCANNER_EVENTS;
+
+static const ad_kbscn_config kbscn_config = {
+    .num_rows = FS_SCANNER_NUM_ROWS,
+    .rows = kbscn_rows,
+    .num_columns = FS_SCANNER_NUM_COLUMNS,
+    .columns = kbscn_columns,
+    .key_matrix = kbscn_matrix,
+    .clock_div = AD_KBSCN_CLOCK_DIV_16,
+    .row_scan_time = 150,
+    .debounce_press_time = 10,
+    .debounce_release_time = 10,
+    .inactive_time = 1,
+    .cb = scanner_cb,
+};
+
+void scanner_init()
 {
 	// parse rows
-	kbscn.num_rows = config->num_rows;
-	ad_kbscn_pin_setup *rows = pvPortMalloc(
-			sizeof(ad_kbscn_pin_setup) * kbscn.num_rows);
-	for (int index = 0; index < kbscn.num_rows; index++)
+	for (int index = 0; index < FS_SCANNER_NUM_ROWS; index++)
 	{
-		rows[index].in_use = true;
-		rows[index].port = (config->rows[index] >> 4);
-		rows[index].pin = (config->rows[index] & 0x0F);
+		kbscn_rows[index].in_use = true;
+		kbscn_rows[index].port = (rows[index] >> 4);
+		kbscn_rows[index].pin = (rows[index] & 0x0F);
 	}
-	kbscn.rows = rows;
 
 	// parse columns
-	kbscn.num_columns = config->num_columns;
-	ad_kbscn_pin_setup *columns = pvPortMalloc(
-			sizeof(ad_kbscn_pin_setup) * kbscn.num_columns);
-	for (int index = 0; index < kbscn.num_columns; index++)
+	for (int index = 0; index < FS_SCANNER_NUM_COLUMNS; index++)
 	{
-		columns[index].in_use = true;
-		columns[index].port = (config->columns[index] >> 4);
-		columns[index].pin = (config->columns[index] & 0x0F);
+		kbscn_columns[index].in_use = true;
+		kbscn_columns[index].port = (columns[index] >> 4);
+		kbscn_columns[index].pin = (columns[index] & 0x0F);
 	}
-	kbscn.columns = columns;
-
-	// parse events
-	char *key_matrix = pvPortMalloc(kbscn.num_rows * kbscn.num_columns);
-	for (int event = 0; event < kbscn.num_rows * kbscn.num_columns; event++)
-		key_matrix[event] = (char) config->events[event];
-	kbscn.key_matrix = key_matrix;
-
-	// other settings
-	kbscn.clock_div = AD_KBSCN_CLOCK_DIV_16;
-	kbscn.row_scan_time = 150;
-	kbscn.debounce_press_time = 10;
-	kbscn.debounce_release_time = 10;
-	kbscn.inactive_time = 1;
-	kbscn.cb = scanner_cb;
 }
 
 void scanner_run()
 {
-	ad_kbscn_init(&kbscn);
+	ad_kbscn_init(&kbscn_config);
 }
 
 void scanner_stop()
@@ -79,3 +81,5 @@ static void scanner_cb(AD_KBSCN_EVENT event, char key)
 {
 	printf("yay got event %d and key %d\n", event, (uint8_t) key);
 }
+
+#endif /* FS_USE_SCANNER */

@@ -23,8 +23,6 @@
 #include "sys_power_mgr.h"
 #include "hw_gpio.h"
 
-#include "config.h"
-
 #include "inputs/scanner.h"
 #include "outputs/blinky.h"
 
@@ -36,8 +34,10 @@ int main(void)
 
 	TaskHandle_t handle;
 	xTaskCreate(system_init, "system_init",
-			configMINIMAL_STACK_SIZE * sizeof(StackType_t), NULL,
-			configMAX_PRIORITIES - 1, &handle);
+	            configMINIMAL_STACK_SIZE * sizeof(StackType_t),
+	            NULL,
+	            configMAX_PRIORITIES - 1,
+	            &handle);
 
 	vTaskStartScheduler();
 }
@@ -51,15 +51,15 @@ static void system_init(void *data)
 
 	pm_system_init(NULL);
 	blinky_init();
-	scanner_init(&SCANNER_CONFIG);
+	scanner_init();
 
 	resource_init();
 
 #if defined CONFIG_RETARGET
 	hw_gpio_set_pin_function(HW_GPIO_PORT_1, HW_GPIO_PIN_3, HW_GPIO_MODE_OUTPUT,
-			HW_GPIO_FUNC_UART_TX);
+	                         HW_GPIO_FUNC_UART_TX);
 	hw_gpio_set_pin_function(HW_GPIO_PORT_2, HW_GPIO_PIN_3, HW_GPIO_MODE_INPUT,
-			HW_GPIO_FUNC_UART_RX);
+	                         HW_GPIO_FUNC_UART_RX);
 	extern void retarget_init(void);
 	retarget_init();
 #endif
