@@ -47,10 +47,9 @@ void blinky_run()
 	if (blinky_handle)
 		return;
 
-	xTaskCreate(blinky_task, "print_task",
+	xTaskCreate(blinky_task, "blinky_task",
 	            configMINIMAL_STACK_SIZE * sizeof(StackType_t),
-	            NULL, 1,
-	            &blinky_handle);
+	            NULL, 1, &blinky_handle);
 }
 
 void blinky_stop()

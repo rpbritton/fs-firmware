@@ -23,6 +23,7 @@
 #include "sys_power_mgr.h"
 #include "hw_gpio.h"
 
+#include "core/router.h"
 #include "inputs/scanner.h"
 #include "outputs/blinky.h"
 
@@ -50,8 +51,12 @@ static void system_init(void *data)
 	cm_lp_clk_init();
 
 	pm_system_init(NULL);
+
+	router_init();
 	blinky_init();
+#ifdef FS_USE_SCANNER
 	scanner_init();
+#endif
 
 	resource_init();
 
@@ -64,8 +69,11 @@ static void system_init(void *data)
 	retarget_init();
 #endif
 
+	router_run();
 	blinky_run();
+#ifdef FS_USE_SCANNER
 	scanner_run();
+#endif
 
 	vTaskDelete(NULL);
 }

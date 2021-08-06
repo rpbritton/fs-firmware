@@ -23,6 +23,8 @@
 #include "osal.h"
 #include "ad_keyboard_scanner.h"
 
+#include "../core/router.h"
+
 static void scanner_cb(AD_KBSCN_EVENT event, char key);
 
 static const uint8_t rows[FS_SCANNER_NUM_ROWS] = FS_SCANNER_ROWS;
@@ -69,6 +71,7 @@ void scanner_init()
 
 void scanner_run()
 {
+	// todo: should this be in "init"?
 	ad_kbscn_init(&kbscn_config);
 }
 
@@ -79,7 +82,12 @@ void scanner_stop()
 
 static void scanner_cb(AD_KBSCN_EVENT event, char key)
 {
-	printf("yay got event %d and key %d\n", event, (uint8_t) key);
+	Packet packet = {
+	    .type = PACKET_EVENT,
+	    .num = (uint8_t) key,
+	    .state = (event == AD_KBSCN_EVENT_PRESSED) ? PACKET_ON : PACKET_OFF,
+	};
+	router_send_from_isr(packet);
 }
 
 #endif /* FS_USE_SCANNER */
