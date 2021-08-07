@@ -14,17 +14,20 @@
  * limitations under the License.
  */
 
-#ifndef CORE_ROUTER_H_
-#define CORE_ROUTER_H_
+#ifndef OUTPUTS_PRINTER_H_
+#define OUTPUTS_PRINTER_H_
+
+#if FS_USE_PRINTER
 
 #include "osal.h"
 
 #include "../common/packet.h"
 
-void router_init();
-void router_run();
-void router_stop();
-void router_route(PacketType packet_type, QueueHandle_t queue);
-QueueHandle_t router_queue();
+void printer_init();
+void printer_run();
+void printer_stop();
+QueueHandle_t printer_get_queue();
 
-#endif /* CORE_ROUTER_H_ */
+#endif /* FS_USE_PRINTER */
+
+#endif /* OUTPUTS_PRINTER_H_ */

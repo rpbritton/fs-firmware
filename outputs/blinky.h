@@ -17,8 +17,12 @@
 #ifndef OUTPUTS_BLINKY_H_
 #define OUTPUTS_BLINKY_H_
 
+#if FS_USE_BLINKY
+
 void blinky_init();
 void blinky_run();
 void blinky_stop();
+
+#endif /* FS_USE_BLINKY */
 
 #endif /* OUTPUTS_BLINKY_H_ */

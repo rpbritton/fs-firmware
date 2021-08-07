@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-#include <stdio.h>
-#include <stdbool.h>
-
 #include "osal.h"
 #include "resmgmt.h"
 #include "sys_clock_mgr.h"
@@ -26,6 +23,7 @@
 #include "core/router.h"
 #include "inputs/scanner.h"
 #include "outputs/blinky.h"
+#include "outputs/printer.h"
 
 static void system_init(void *data);
 
@@ -53,9 +51,16 @@ static void system_init(void *data)
 	pm_system_init(NULL);
 
 	router_init();
-	blinky_init();
 #ifdef FS_USE_SCANNER
 	scanner_init();
+	scanner_route(router_queue());
+#endif
+#ifdef FS_USE_BLINKY
+	blinky_init();
+#endif
+#ifdef FS_USE_PRINTER
+	printer_init();
+	router_route(PACKET_EVENT, printer_get_queue());
 #endif
 
 	resource_init();
@@ -70,9 +75,14 @@ static void system_init(void *data)
 #endif
 
 	router_run();
-	blinky_run();
 #ifdef FS_USE_SCANNER
 	scanner_run();
+#endif
+#ifdef FS_USE_BLINKY
+	blinky_run();
+#endif
+#ifdef FS_USE_PRINTER
+	printer_run();
 #endif
 
 	vTaskDelete(NULL);

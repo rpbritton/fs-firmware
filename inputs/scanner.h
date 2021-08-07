@@ -19,9 +19,12 @@
 
 #if FS_USE_SCANNER
 
+#include "osal.h"
+
 void scanner_init();
 void scanner_run();
 void scanner_stop();
+void scanner_route(QueueHandle_t queue);
 
 #endif /* FS_USE_SCANNER */
 

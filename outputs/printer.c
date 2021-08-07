@@ -14,59 +14,51 @@
  * limitations under the License.
  */
 
-#include "router.h"
+#if FS_USE_PRINTER
 
-#include "osal.h"
+#include "printer.h"
 
-#ifndef FS_ROUTER_QUEUE_SIZE
-#define FS_ROUTER_QUEUE_SIZE (20)
-#endif
+#include <stdio.h>
 
-static void router_task(void *data);
+static void printer_task(void *data);
 
-static QueueHandle_t queue_handle = NULL;
-static TaskHandle_t task_handle = NULL;
-static QueueHandle_t routes[PACKET_TYPE_TOTAL];
+QueueHandle_t queue_handle = NULL;
+TaskHandle_t task_handle = NULL;
 
-void router_init()
+void printer_init()
 {
-	queue_handle = xQueueCreate(FS_ROUTER_QUEUE_SIZE, sizeof(Packet));
+	queue_handle = xQueueCreate(20, sizeof(Packet));
 }
 
-void router_run()
+void printer_run()
 {
 	// do nothing if running
 	if (task_handle)
 		return;
 
-	// stop router task
-	xTaskCreate(router_task, "router_task",
+	// start task
+	xTaskCreate(printer_task, "router_task",
 	            configMINIMAL_STACK_SIZE * sizeof(StackType_t),
 	            NULL, 1, &task_handle);
 }
 
-void router_stop()
+void printer_stop()
 {
 	// do nothing if not running
 	if (!task_handle)
 		return;
 
-	// stop router task
+	// stop task
 	vTaskDelete(task_handle);
 	task_handle = NULL;
 }
 
-void router_route(PacketType packet_type, QueueHandle_t queue)
-{
-	routes[packet_type] = queue;
-}
-
-QueueHandle_t router_queue()
+QueueHandle_t printer_get_queue()
 {
 	return queue_handle;
 }
 
-static void router_task(void *data)
+static void printer_task(void *data)
 {
 	// start with empty queue
 	xQueueReset(queue_handle);
@@ -77,10 +69,8 @@ static void router_task(void *data)
 		Packet packet;
 		xQueueReceive(queue_handle, &packet, portMAX_DELAY);
 
-		QueueHandle_t route = routes[packet.type];
-		if (!route)
-			continue;
-
-		xQueueSend(route, &packet, 0);
+		printf("got packet! %d %d %d\n", packet.type, packet.num, packet.state);
 	}
 }
+
+#endif /* OUTPUTS_PRINTER_H_ */

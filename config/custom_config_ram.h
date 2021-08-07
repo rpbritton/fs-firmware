@@ -43,18 +43,21 @@
 #define dg_configRF_ADAPTER             (0)
 #define dg_configCRYPTO_ADAPTER         (0)
 
-// enable keyboard scanner
+// scanner config
 #define dg_configKEYBOARD_SCANNER_ADAPTER  (1)
 #define dg_configUSE_HW_KEYBOARD_SCANNER   (1)
 #define CONFIG_KEYBOARD_SCANNER_DEGHOSTING (0)
 
-// scanner config
 #define FS_USE_SCANNER         (1)
 #define FS_SCANNER_NUM_ROWS    (3)
 #define FS_SCANNER_NUM_COLUMNS (3)
 #define FS_SCANNER_ROWS        {0x34, 0x33, 0x45}
 #define FS_SCANNER_COLUMNS     {0x47, 0x30, 0x46}
 #define FS_SCANNER_EVENTS      {0, 1, 2, 3, 4, 5, 6, 7, 8}
+
+// debug config
+#define FS_USE_BLINKY  (1)
+#define FS_USE_PRINTER (1)
 
 #include "bsp_defaults.h"
 #include "bsp_memory_layout.h"

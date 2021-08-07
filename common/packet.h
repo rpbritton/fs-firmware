@@ -24,8 +24,9 @@ typedef enum PacketType
 	PACKET_USB,
 	PACKET_EVENT,
 	PACKET_LAYER,
+	PACKET_TYPE_TOTAL,
 
-	PACKET_TYPE_MAX = 0xFF,
+	PACKET_TYPE_MAX = 0xFF + 1,
 } PacketType;
 
 typedef enum PacketState

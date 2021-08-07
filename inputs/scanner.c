@@ -18,12 +18,9 @@
 
 #include "scanner.h"
 
-#include <stdio.h>
-
-#include "osal.h"
 #include "ad_keyboard_scanner.h"
 
-#include "../core/router.h"
+#include "../common/packet.h"
 
 static void scanner_cb(AD_KBSCN_EVENT event, char key);
 
@@ -50,7 +47,9 @@ static const ad_kbscn_config kbscn_config = {
     .cb = scanner_cb,
 };
 
-void scanner_init()
+static QueueHandle_t queue_handle = NULL;
+
+void scanner_init(QueueHandle_t router_queue)
 {
 	// parse rows
 	for (int index = 0; index < FS_SCANNER_NUM_ROWS; index++)
@@ -80,6 +79,11 @@ void scanner_stop()
 	ad_kbscn_cleanup();
 }
 
+void scanner_route(QueueHandle_t queue)
+{
+	queue_handle = queue;
+}
+
 static void scanner_cb(AD_KBSCN_EVENT event, char key)
 {
 	Packet packet = {
@@ -87,7 +91,7 @@ static void scanner_cb(AD_KBSCN_EVENT event, char key)
 	    .num = (uint8_t) key,
 	    .state = (event == AD_KBSCN_EVENT_PRESSED) ? PACKET_ON : PACKET_OFF,
 	};
-	router_send_from_isr(packet);
+	xQueueSendFromISR(queue_handle, &packet, NULL);
 }
 
 #endif /* FS_USE_SCANNER */

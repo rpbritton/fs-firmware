@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#if FS_USE_BLINKY
+
 #include "blinky.h"
 
 #include "osal.h"
@@ -75,3 +77,5 @@ static void blinky_task(void *data)
 			hw_breath_disable();
 	}
 }
+
+#endif /* FS_USE_BLINKY */
