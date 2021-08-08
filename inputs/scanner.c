@@ -20,9 +20,8 @@
 
 #include "ad_keyboard_scanner.h"
 
-#include "../common/packet.h"
-
-static void scanner_cb(AD_KBSCN_EVENT event, char key);
+static void scanner_callback(AD_KBSCN_EVENT event, char key);
+static void scanner_task(void *data);
 
 static const uint8_t rows[FS_SCANNER_NUM_ROWS] = FS_SCANNER_ROWS;
 static const uint8_t columns[FS_SCANNER_NUM_COLUMNS] = FS_SCANNER_COLUMNS;
@@ -44,13 +43,21 @@ static const ad_kbscn_config kbscn_config = {
     .debounce_press_time = 10,
     .debounce_release_time = 10,
     .inactive_time = 1,
-    .cb = scanner_cb,
+    .cb = scanner_callback,
 };
 
+static TaskHandle_t task_handle = NULL;
 static QueueHandle_t queue_handle = NULL;
+static PacketRoute packet_route = NULL;
 
-void scanner_init(QueueHandle_t router_queue)
+void scanner_init(PacketRoute route)
 {
+	// set packet route
+	packet_route = route;
+
+	// add packet queue
+	queue_handle = xQueueCreate(10, sizeof(Packet));
+
 	// parse rows
 	for (int index = 0; index < FS_SCANNER_NUM_ROWS; index++)
 	{
@@ -66,32 +73,56 @@ void scanner_init(QueueHandle_t router_queue)
 		kbscn_columns[index].port = (columns[index] >> 4);
 		kbscn_columns[index].pin = (columns[index] & 0x0F);
 	}
+
+	// init the keyboard config
+	ad_kbscn_init(&kbscn_config);
 }
 
 void scanner_run()
 {
-	// todo: should this be in "init"?
-	ad_kbscn_init(&kbscn_config);
+	// do nothing if running
+	if (task_handle)
+		return;
+
+	// stop router task
+	xTaskCreate(scanner_task, "scanner_task",
+	            configMINIMAL_STACK_SIZE * sizeof(StackType_t),
+	            NULL, 1, &task_handle);
 }
 
 void scanner_stop()
 {
-	ad_kbscn_cleanup();
+	// do nothing if not running
+	if (!task_handle)
+		return;
+
+	// stop router task
+	vTaskDelete(task_handle);
+	task_handle = NULL;
 }
 
-void scanner_route(QueueHandle_t queue)
-{
-	queue_handle = queue;
-}
-
-static void scanner_cb(AD_KBSCN_EVENT event, char key)
+static void scanner_callback(AD_KBSCN_EVENT event, char key)
 {
 	Packet packet = {
-	    .type = PACKET_EVENT,
+	    .type = PACKET_SCANNER,
 	    .num = (uint8_t) key,
 	    .state = (event == AD_KBSCN_EVENT_PRESSED) ? PACKET_ON : PACKET_OFF,
 	};
 	xQueueSendFromISR(queue_handle, &packet, NULL);
+}
+
+static void scanner_task(void *data)
+{
+	// start with empty queue
+	xQueueReset(queue_handle);
+
+	// wait for items to enter the queue
+	while (true)
+	{
+		Packet packet;
+		xQueueReceive(queue_handle, &packet, portMAX_DELAY);
+		packet_route(packet);
+	}
 }
 
 #endif /* FS_USE_SCANNER */

@@ -52,15 +52,14 @@ static void system_init(void *data)
 
 	router_init();
 #ifdef FS_USE_SCANNER
-	scanner_init();
-	scanner_route(router_queue());
+	scanner_init(router_send);
 #endif
 #ifdef FS_USE_BLINKY
 	blinky_init();
 #endif
 #ifdef FS_USE_PRINTER
 	printer_init();
-	router_route(PACKET_EVENT, printer_get_queue());
+	router_route(PACKET_SCANNER, printer_send);
 #endif
 
 	resource_init();

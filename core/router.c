@@ -26,7 +26,7 @@ static void router_task(void *data);
 
 static QueueHandle_t queue_handle = NULL;
 static TaskHandle_t task_handle = NULL;
-static QueueHandle_t routes[PACKET_TYPE_TOTAL];
+static PacketRoute packet_routes[PACKET_TYPE_TOTAL];
 
 void router_init()
 {
@@ -56,14 +56,14 @@ void router_stop()
 	task_handle = NULL;
 }
 
-void router_route(PacketType packet_type, QueueHandle_t queue)
+void router_route(PacketType packet_type, PacketRoute packet_route)
 {
-	routes[packet_type] = queue;
+	packet_routes[packet_type] = packet_route;
 }
 
-QueueHandle_t router_queue()
+void router_send(Packet packet)
 {
-	return queue_handle;
+	xQueueSend(queue_handle, &packet, 0);
 }
 
 static void router_task(void *data)
@@ -77,10 +77,10 @@ static void router_task(void *data)
 		Packet packet;
 		xQueueReceive(queue_handle, &packet, portMAX_DELAY);
 
-		QueueHandle_t route = routes[packet.type];
-		if (!route)
+		PacketRoute packet_route = packet_routes[packet.type];
+		if (!packet_route)
 			continue;
 
-		xQueueSend(route, &packet, 0);
+		packet_route(packet);
 	}
 }

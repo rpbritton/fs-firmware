@@ -21,10 +21,11 @@
 
 #include "osal.h"
 
-void scanner_init();
+#include "../common/packet.h"
+
+void scanner_init(PacketRoute packet_route);
 void scanner_run();
 void scanner_stop();
-void scanner_route(QueueHandle_t queue);
 
 #endif /* FS_USE_SCANNER */
 

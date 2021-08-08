@@ -26,7 +26,7 @@
 void printer_init();
 void printer_run();
 void printer_stop();
-QueueHandle_t printer_get_queue();
+void printer_send(Packet packet);
 
 #endif /* FS_USE_PRINTER */
 

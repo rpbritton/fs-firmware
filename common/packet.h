@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-#ifndef CORE_PACKET_H_
-#define CORE_PACKET_H_
+#ifndef COMMON_PACKET_H_
+#define COMMON_PACKET_H_
 
 #include "osal.h"
 
 typedef enum PacketType
 {
 	PACKET_USB,
-	PACKET_EVENT,
+	PACKET_SCANNER,
 	PACKET_LAYER,
 	PACKET_TYPE_TOTAL,
 
@@ -42,4 +42,6 @@ typedef struct Packet
 	PacketState state;
 } Packet;
 
-#endif /* CORE_PACKET_H_ */
+typedef void (*PacketRoute)(Packet packet);
+
+#endif /* COMMON_PACKET_H_ */
