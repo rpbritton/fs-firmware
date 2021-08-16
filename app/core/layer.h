@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-#ifndef CORE_LAYOUT_H_
-#define CORE_LAYOUT_H_
+#ifndef APP_CORE_LAYER_H_
+#define APP_CORE_LAYER_H_
 
 #include "common/packet.h"
 
-#include "core/event.h"
+typedef uint8_t Layer;
 
-PacketSpec layout_lookup(Event event);
+Layer layer_lookup(int depth);
+void layer_send(Packet packet);
 
-#endif /* CORE_LAYOUT_H_ */
+#endif /* APP_CORE_LAYER_H_ */

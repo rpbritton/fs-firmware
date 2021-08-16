@@ -28,8 +28,8 @@
 
 // layout config
 #include "common/layout.h"
-#define FS_LAYOUT_LAYERS (2)
-#define FS_LAYOUT_EVENTS (9)
+#define FS_LAYER_NUM (2)
+#define FS_EVENT_NUM (9)
 #define FS_LAYOUT_SPEC {                               \
 	{                                                  \
 		KB_A, KB_B, KB_C,                              \
@@ -38,7 +38,7 @@
 	},	{                                              \
 		KB_1, KB_2, KB_3,                              \
 		KB_4, KB_5, KB_6,                              \
-		KB_7, KB_8, KB_9,                              \
+		KB_7, KB_8, _____,                              \
 	},                                                 \
 }
 

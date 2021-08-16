@@ -20,4 +20,13 @@
 #include "hidcodes.h"
 #include "packet.h"
 
+// todo: can these files be better organized?
+
+// todo: can you fit an enum to determine the numbers? maybe LAYOUT_NONE_NUM
+#define LAYOUT_NONE { .type = PACKET_LAYOUT, .num = 0x00 }
+#define _XXX_ LAYOUT_NONE
+
+#define LAYOUT_FALLTHROUGH { .type = PACKET_LAYOUT, .num = 0x01 }
+#define _____ LAYOUT_FALLTHROUGH
+
 #endif /* COMMON_LAYOUT_H_ */

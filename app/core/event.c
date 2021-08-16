@@ -14,13 +14,26 @@
  * limitations under the License.
  */
 
-#ifndef CORE_LAYOUT_H_
-#define CORE_LAYOUT_H_
+#include "event.h"
 
-#include "common/packet.h"
+#include "config.h"
+#include "core/layout.h"
+#include "core/router.h"
 
-#include "core/event.h"
+typedef struct EventState
+{
+	bool active :1;
+	Packet packet;
+} EventState;
 
-PacketSpec layout_lookup(Event event);
+EventState event_states[FS_EVENT_NUM];
 
-#endif /* CORE_LAYOUT_H_ */
+void event_send(Packet packet)
+{
+	// todo: update event states
+	Packet packet_lookup = {
+	    .spec = layout_lookup(packet.spec.num),
+	    .state = packet.state,
+	};
+	router_send(packet_lookup);
+}

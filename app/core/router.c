@@ -19,9 +19,8 @@
 
 #include "osal.h"
 
-#include "core/layout.h"
-
-#include "inputs/scanner.h"
+#include "core/event.h"
+#include "core/layer.h"
 #include "outputs/printer.h"
 
 #ifndef FS_ROUTER_QUEUE_SIZE
@@ -83,7 +82,10 @@ static void router_task(void *data)
 			printer_send(packet);
 			break;
 		case PACKET_EVENT:
-			layout_send(packet);
+			event_send(packet);
+			break;
+		case PACKET_LAYER:
+			layer_send(packet);
 			break;
 		default:
 			printer_send(packet);

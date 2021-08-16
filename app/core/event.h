@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-#ifndef CORE_LAYOUT_H_
-#define CORE_LAYOUT_H_
+#ifndef APP_CORE_EVENT_H_
+#define APP_CORE_EVENT_H_
 
 #include "common/packet.h"
 
-#include "core/event.h"
+typedef uint8_t Event;
 
-PacketSpec layout_lookup(Event event);
+void event_send(Packet packet);
 
-#endif /* CORE_LAYOUT_H_ */
+#endif /* APP_CORE_EVENT_H_ */

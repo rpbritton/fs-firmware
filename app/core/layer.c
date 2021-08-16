@@ -14,13 +14,24 @@
  * limitations under the License.
  */
 
-#ifndef CORE_LAYOUT_H_
-#define CORE_LAYOUT_H_
+#include "layer.h"
 
-#include "common/packet.h"
+#include "config.h"
 
-#include "core/event.h"
+typedef struct LayerState
+{
+	bool active :1;
+} LayerState;
 
-PacketSpec layout_lookup(Event event);
+LayerState layer_states[FS_LAYER_NUM];
 
-#endif /* CORE_LAYOUT_H_ */
+Layer layer_lookup(int depth)
+{
+	// todo: check layer states
+	return 0;
+}
+
+void layer_send(Packet packet)
+{
+	// todo: update layer stack
+}

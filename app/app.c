@@ -27,7 +27,6 @@
 void app_init()
 {
 	router_init();
-	layout_init();
 #ifdef FS_USE_SCANNER
 	scanner_init();
 #endif
