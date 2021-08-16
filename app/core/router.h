@@ -19,12 +19,11 @@
 
 #include "osal.h"
 
-#include "../common/packet.h"
+#include "common/packet.h"
 
 void router_init();
 void router_run();
 void router_stop();
-void router_route(PacketType packet_type, PacketRoute packet_route);
 void router_send(Packet packet);
 
 #endif /* CORE_ROUTER_H_ */

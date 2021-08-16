@@ -1,4 +1,5 @@
 /**
+ #include <app/outputs/printer.h>
  * Copyright 2021 Ryan Britton
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +19,11 @@
 
 #include "osal.h"
 
+#include "core/layout.h"
+
+#include "inputs/scanner.h"
+#include "outputs/printer.h"
+
 #ifndef FS_ROUTER_QUEUE_SIZE
 #define FS_ROUTER_QUEUE_SIZE (20)
 #endif
@@ -26,7 +32,6 @@ static void router_task(void *data);
 
 static QueueHandle_t queue_handle = NULL;
 static TaskHandle_t task_handle = NULL;
-static PacketRoute packet_routes[PACKET_TYPE_TOTAL];
 
 void router_init()
 {
@@ -56,11 +61,6 @@ void router_stop()
 	task_handle = NULL;
 }
 
-void router_route(PacketType packet_type, PacketRoute packet_route)
-{
-	packet_routes[packet_type] = packet_route;
-}
-
 void router_send(Packet packet)
 {
 	xQueueSend(queue_handle, &packet, 0);
@@ -77,10 +77,17 @@ static void router_task(void *data)
 		Packet packet;
 		xQueueReceive(queue_handle, &packet, portMAX_DELAY);
 
-		PacketRoute packet_route = packet_routes[packet.type];
-		if (!packet_route)
-			continue;
-
-		packet_route(packet);
+		switch (packet.spec.type)
+		{
+		case PACKET_USB:
+			printer_send(packet);
+			break;
+		case PACKET_EVENT:
+			layout_send(packet);
+			break;
+		default:
+			printer_send(packet);
+			break;
+		}
 	}
 }

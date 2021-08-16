@@ -14,20 +14,11 @@
  * limitations under the License.
  */
 
-#ifndef OUTPUTS_PRINTER_H_
-#define OUTPUTS_PRINTER_H_
+#ifndef COMMON_LAYOUT_H_
+#define COMMON_LAYOUT_H_
 
-#if FS_USE_PRINTER
+#include "keycodes_short.h"
+#include "keycodes_long.h"
+#include "packet.h"
 
-#include "osal.h"
-
-#include "../common/packet.h"
-
-void printer_init();
-void printer_run();
-void printer_stop();
-void printer_send(Packet packet);
-
-#endif /* FS_USE_PRINTER */
-
-#endif /* OUTPUTS_PRINTER_H_ */
+#endif /* COMMON_LAYOUT_H_ */

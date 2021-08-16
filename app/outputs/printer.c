@@ -20,10 +20,18 @@
 
 #include <stdio.h>
 
-static void printer_task(void *data);
+#include "hw_gpio.h"
 
 void printer_init()
 {
+#ifdef CONFIG_RETARGET
+	hw_gpio_set_pin_function(HW_GPIO_PORT_1, HW_GPIO_PIN_3, HW_GPIO_MODE_OUTPUT,
+	                         HW_GPIO_FUNC_UART_TX);
+	hw_gpio_set_pin_function(HW_GPIO_PORT_2, HW_GPIO_PIN_3, HW_GPIO_MODE_INPUT,
+	                         HW_GPIO_FUNC_UART_RX);
+	extern void retarget_init(void);
+	retarget_init();
+#endif
 }
 
 void printer_run()
@@ -36,7 +44,8 @@ void printer_stop()
 
 void printer_send(Packet packet)
 {
-	printf("got packet! %d %d %d\n", packet.type, packet.num, packet.state);
+	printf("got packet! %d %d %d\n", packet.spec.type, packet.spec.num,
+	       packet.state);
 }
 
 #endif /* OUTPUTS_PRINTER_H_ */

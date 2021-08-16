@@ -24,7 +24,7 @@
 
 static void blinky_task(void *data);
 
-static TaskHandle_t blinky_handle;
+static TaskHandle_t task_handle;
 
 void blinky_init()
 {
@@ -46,21 +46,21 @@ void blinky_init()
 
 void blinky_run()
 {
-	if (blinky_handle)
+	if (task_handle)
 		return;
 
 	xTaskCreate(blinky_task, "blinky_task",
 	            configMINIMAL_STACK_SIZE * sizeof(StackType_t),
-	            NULL, 1, &blinky_handle);
+	            NULL, 1, &task_handle);
 }
 
 void blinky_stop()
 {
-	if (!blinky_handle)
+	if (!task_handle)
 		return;
 
-	vTaskDelete(blinky_handle);
-	blinky_handle = NULL;
+	vTaskDelete(task_handle);
+	task_handle = NULL;
 }
 
 static void blinky_task(void *data)

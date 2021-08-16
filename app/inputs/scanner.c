@@ -20,6 +20,8 @@
 
 #include "ad_keyboard_scanner.h"
 
+#include "core/router.h"
+
 static void scanner_callback(AD_KBSCN_EVENT event, char key);
 static void scanner_task(void *data);
 
@@ -48,13 +50,9 @@ static const ad_kbscn_config kbscn_config = {
 
 static TaskHandle_t task_handle = NULL;
 static QueueHandle_t queue_handle = NULL;
-static PacketRoute packet_route = NULL;
 
-void scanner_init(PacketRoute route)
+void scanner_init()
 {
-	// set packet route
-	packet_route = route;
-
 	// add packet queue
 	queue_handle = xQueueCreate(10, sizeof(Packet));
 
@@ -104,8 +102,8 @@ void scanner_stop()
 static void scanner_callback(AD_KBSCN_EVENT event, char key)
 {
 	Packet packet = {
-	    .type = PACKET_SCANNER,
-	    .num = (uint8_t) key,
+	    .spec.type = PACKET_EVENT,
+	    .spec.num = (uint8_t) key,
 	    .state = (event == AD_KBSCN_EVENT_PRESSED) ? PACKET_ON : PACKET_OFF,
 	};
 	xQueueSendFromISR(queue_handle, &packet, NULL);
@@ -121,7 +119,7 @@ static void scanner_task(void *data)
 	{
 		Packet packet;
 		xQueueReceive(queue_handle, &packet, portMAX_DELAY);
-		packet_route(packet);
+		router_send(packet);
 	}
 }
 

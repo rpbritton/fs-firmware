@@ -1,4 +1,7 @@
 /**
+ #include <app/inputs/scanner.h>
+ #include <app/outputs/blinky.h>
+ #include <app/outputs/printer.h>
  * Copyright 2021 Ryan Britton
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,10 +23,7 @@
 #include "sys_power_mgr.h"
 #include "hw_gpio.h"
 
-#include "core/router.h"
-#include "inputs/scanner.h"
-#include "outputs/blinky.h"
-#include "outputs/printer.h"
+#include "app/app.h"
 
 static void system_init(void *data);
 
@@ -49,40 +49,11 @@ static void system_init(void *data)
 	cm_lp_clk_init();
 
 	pm_system_init(NULL);
-
-	router_init();
-#ifdef FS_USE_SCANNER
-	scanner_init(router_send);
-#endif
-#ifdef FS_USE_BLINKY
-	blinky_init();
-#endif
-#ifdef FS_USE_PRINTER
-	printer_init();
-	router_route(PACKET_SCANNER, printer_send);
-#endif
+	app_init();
 
 	resource_init();
 
-#if defined CONFIG_RETARGET
-	hw_gpio_set_pin_function(HW_GPIO_PORT_1, HW_GPIO_PIN_3, HW_GPIO_MODE_OUTPUT,
-	                         HW_GPIO_FUNC_UART_TX);
-	hw_gpio_set_pin_function(HW_GPIO_PORT_2, HW_GPIO_PIN_3, HW_GPIO_MODE_INPUT,
-	                         HW_GPIO_FUNC_UART_RX);
-	extern void retarget_init(void);
-	retarget_init();
-#endif
-
-	router_run();
-#ifdef FS_USE_SCANNER
-	scanner_run();
-#endif
-#ifdef FS_USE_BLINKY
-	blinky_run();
-#endif
-#ifdef FS_USE_PRINTER
-	printer_run();
-#endif
+	app_run();
 
 	vTaskDelete(NULL);
 }

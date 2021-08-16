@@ -14,34 +14,19 @@
  * limitations under the License.
  */
 
-#ifndef COMMON_PACKET_H_
-#define COMMON_PACKET_H_
+#ifndef INPUTS_SCANNER_H_
+#define INPUTS_SCANNER_H_
+
+#if FS_USE_SCANNER
 
 #include "osal.h"
 
-typedef enum PacketType
-{
-	PACKET_USB,
-	PACKET_SCANNER,
-	PACKET_LAYER,
-	PACKET_TYPE_TOTAL,
+#include "common/packet.h"
 
-	PACKET_TYPE_MAX = 0xFF + 1,
-} PacketType;
+void scanner_init();
+void scanner_run();
+void scanner_stop();
 
-typedef enum PacketState
-{
-	PACKET_OFF = false,
-	PACKET_ON = true,
-} PacketState;
+#endif /* FS_USE_SCANNER */
 
-typedef struct Packet
-{
-	PacketType type;
-	uint8_t num;
-	PacketState state;
-} Packet;
-
-typedef void (*PacketRoute)(Packet packet);
-
-#endif /* COMMON_PACKET_H_ */
+#endif /* INPUTS_SCANNER_H_ */
