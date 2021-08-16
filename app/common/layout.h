@@ -17,8 +17,7 @@
 #ifndef COMMON_LAYOUT_H_
 #define COMMON_LAYOUT_H_
 
-#include "keycodes_short.h"
-#include "keycodes_long.h"
+#include "hidcodes.h"
 #include "packet.h"
 
 #endif /* COMMON_LAYOUT_H_ */

@@ -21,8 +21,8 @@
 
 typedef enum PacketType
 {
-	PACKET_USB,
 	PACKET_EVENT,
+	PACKET_HID,
 	PACKET_LAYER,
 	PACKET_TYPE_TOTAL,
 

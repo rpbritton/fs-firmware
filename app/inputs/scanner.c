@@ -20,6 +20,7 @@
 
 #include "ad_keyboard_scanner.h"
 
+#include "config.h"
 #include "core/router.h"
 
 static void scanner_callback(AD_KBSCN_EVENT event, char key);

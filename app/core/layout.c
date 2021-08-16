@@ -16,9 +16,39 @@
 
 #include "layout.h"
 
+#include "config.h"
+
+typedef struct EventState
+{
+	bool on :1;
+	Packet packet;
+} EventState;
+
+typedef struct LayerState
+{
+	bool on :1;
+} LayerState;
+
+const PacketSpec layout_spec[FS_LAYOUT_LAYERS][FS_LAYOUT_EVENTS] =
+FS_LAYOUT_SPEC;
+
+LayerState layer_state[FS_LAYOUT_LAYERS];
+EventState event_state[FS_LAYOUT_EVENTS];
+
 void layout_init()
 {
+	for (int index = 0; index < FS_LAYOUT_LAYERS; index++)
+		layer_state[index].on = false;
+	for (int index = 0; index < FS_LAYOUT_EVENTS; index++)
+		event_state[index].on = false;
+}
 
+void layout_run()
+{
+}
+
+void layout_stop()
+{
 }
 
 void layout_send(Packet packet)

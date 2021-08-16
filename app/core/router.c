@@ -79,7 +79,7 @@ static void router_task(void *data)
 
 		switch (packet.spec.type)
 		{
-		case PACKET_USB:
+		case PACKET_HID:
 			printer_send(packet);
 			break;
 		case PACKET_EVENT:

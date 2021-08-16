@@ -47,20 +47,7 @@
 #define dg_configKEYBOARD_SCANNER_ADAPTER  (1)
 #define dg_configUSE_HW_KEYBOARD_SCANNER   (1)
 #define CONFIG_KEYBOARD_SCANNER_DEGHOSTING (0)
-
-#define FS_USE_SCANNER         (1)
-#define FS_SCANNER_NUM_ROWS    (3)
-#define FS_SCANNER_NUM_COLUMNS (3)
-#define FS_SCANNER_ROWS        {0x34, 0x33, 0x45}
-#define FS_SCANNER_COLUMNS     {0x47, 0x30, 0x46}
-#define FS_SCANNER_EVENTS      {0, 1, 2, 3, 4, 5, 6, 7, 8}
-
-// layout config
-//#include "../common/layout.h"
-//#define FS_LAYOUT_LAYER_0 { KB_A, KB_B, KB_C, KB_E, KB_F, KB_G, KB_H, KB_I }
-//#define FS_LAYOUT_LAYER_1 { KB_1, KB_2, KB_3, KB_4, KB_5, KB_6, KB_7, KB_8 }
-//#define FS_LAYOUT_LAYERS (2)
-//#define FS_LAYOUT_SPEC {FS_LAYOUT_LAYER_0, FS_LAYOUT_LAYER_1}
+#define FS_USE_SCANNER                     (1)
 
 // debug config
 #define FS_USE_BLINKY  (1)
