@@ -21,7 +21,8 @@
 
 typedef uint8_t Layer;
 
-Layer layer_lookup(int depth);
+void layer_refresh();
+Layer layer_lookup();
 void layer_send(Packet packet);
 
 #endif /* APP_CORE_LAYER_H_ */

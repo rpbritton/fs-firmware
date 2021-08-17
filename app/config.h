@@ -34,11 +34,11 @@
 	{                                                  \
 		KB_A, KB_B, KB_C,                              \
 		KB_D, KB_E, KB_F,                              \
-		KB_G, KB_H, KB_I,                              \
+		{.type = PACKET_LAYER, .num = 1}, KB_H, KB_I,  \
 	},	{                                              \
 		KB_1, KB_2, KB_3,                              \
 		KB_4, KB_5, KB_6,                              \
-		KB_7, KB_8, _____,                              \
+		{.type = PACKET_LAYER, .num = 1}, KB_8, _____, \
 	},                                                 \
 }
 

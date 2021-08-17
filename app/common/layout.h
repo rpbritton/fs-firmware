@@ -22,11 +22,13 @@
 
 // todo: can these files be better organized?
 
-// todo: can you fit an enum to determine the numbers? maybe LAYOUT_NONE_NUM
-#define LAYOUT_NONE { .type = PACKET_LAYOUT, .num = 0x00 }
-#define _XXX_ LAYOUT_NONE
+enum LayoutCommands
+{
+	LAYOUT_NONE,
+	LAYOUT_FALLTHROUGH,
+};
 
-#define LAYOUT_FALLTHROUGH { .type = PACKET_LAYOUT, .num = 0x01 }
-#define _____ LAYOUT_FALLTHROUGH
+#define _XXX_ { .type = PACKET_LAYOUT, .num = LAYOUT_NONE }
+#define _____ { .type = PACKET_LAYOUT, .num = LAYOUT_FALLTHROUGH }
 
 #endif /* COMMON_LAYOUT_H_ */

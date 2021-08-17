@@ -19,6 +19,7 @@
 
 #include "osal.h"
 
+#include "core/layout.h"
 #include "core/event.h"
 #include "core/layer.h"
 #include "outputs/printer.h"
@@ -70,14 +71,19 @@ static void router_task(void *data)
 	// start with empty queue
 	xQueueReset(queue_handle);
 
-	// wait for items to enter the queue
+	// loop this forever
 	while (true)
 	{
+		// wait for packets to enter the queue
 		Packet packet;
 		xQueueReceive(queue_handle, &packet, portMAX_DELAY);
 
+		// route based on packet type
 		switch (packet.spec.type)
 		{
+		case PACKET_LAYOUT:
+			layout_send(packet);
+			break;
 		case PACKET_HID:
 			printer_send(packet);
 			break;

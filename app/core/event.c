@@ -22,18 +22,59 @@
 
 typedef struct EventState
 {
-	bool active :1;
-	Packet packet;
+	bool active;
+	PacketSpec packet_spec;
 } EventState;
 
 EventState event_states[FS_EVENT_NUM];
 
 void event_send(Packet packet)
 {
-	// todo: update event states
-	Packet packet_lookup = {
-	    .spec = layout_lookup(packet.spec.num),
-	    .state = packet.state,
-	};
-	router_send(packet_lookup);
+	Event event = packet.spec.num;
+
+	// save the event state
+	if (packet.state == PACKET_ON)
+	{
+		if (event_states[event].active)
+			return;
+
+		event_states[event].active = true;
+		event_states[event].packet_spec = layout_lookup(event);
+	}
+	else
+	{
+		if (!event_states[event].active)
+			return;
+
+		event_states[event].active = false;
+	}
+
+	// send the event's command to the router
+	packet.spec = event_states[event].packet_spec;
+	router_send(packet);
+}
+
+void event_refresh()
+{
+	for (Event event = 0; event < FS_EVENT_NUM; event++)
+	{
+		if (!event_states[event].active)
+			continue;
+
+		PacketSpec old_packet_spec = event_states[event].packet_spec;
+		PacketSpec new_packet_spec = layout_lookup(event);
+
+		if (new_packet_spec.type == old_packet_spec.type &&
+		    new_packet_spec.num == old_packet_spec.num)
+			continue;
+
+		event_states[event].packet_spec = new_packet_spec;
+
+		// todo: send to front?
+		Packet old_packet = { .state = PACKET_OFF, .spec = old_packet_spec };
+		router_send(old_packet);
+
+		Packet new_packet = { .state = PACKET_ON, .spec = new_packet_spec };
+		router_send(new_packet);
+	}
 }

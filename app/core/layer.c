@@ -18,20 +18,64 @@
 
 #include "config.h"
 
+#include "core/event.h"
+
 typedef struct LayerState
 {
-	bool active :1;
+	uint8_t activations;
 } LayerState;
 
 LayerState layer_states[FS_LAYER_NUM];
+Layer active_layer = 0;
 
-Layer layer_lookup(int depth)
+void layer_refresh()
 {
-	// todo: check layer states
-	return 0;
+	Layer new_active_layer = 0;
+	for (Layer layer = FS_LAYER_NUM; layer > 0; layer--)
+	{
+		if (layer_states[layer].activations > 0)
+		{
+			new_active_layer = layer;
+			break;
+		}
+	}
+
+	if (new_active_layer == active_layer)
+		return;
+
+	active_layer = new_active_layer;
+	event_refresh();
+}
+
+Layer layer_lookup()
+{
+	return active_layer;
 }
 
 void layer_send(Packet packet)
 {
-	// todo: update layer stack
+	Layer layer = packet.spec.num;
+	if (layer >= FS_LAYER_NUM)
+		return;
+
+	if (packet.state == PACKET_ON)
+	{
+		// increase the activations
+		layer_states[layer].activations++;
+
+		// reevaluate active layer
+		if (layer > active_layer)
+			layer_refresh();
+	}
+	else
+	{
+		// decrease the activations
+		if (layer_states[layer].activations == 0)
+			return;
+		layer_states[layer].activations--;
+
+		// reevaluate active layer
+		if (layer == active_layer && layer_states[layer].activations == 0)
+			layer_refresh();
+	}
 }

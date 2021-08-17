@@ -25,8 +25,32 @@ FS_LAYOUT_SPEC;
 
 PacketSpec layout_lookup(Event event)
 {
+	// find the event's packet spec
+	for (Layer layer = layer_lookup(); layer >= 0; layer--)
+	{
+		PacketSpec packet_spec = layout_spec[layer][event];
+		// process special layout packets here
+		if (packet_spec.type == PACKET_LAYOUT)
+		{
+			switch (packet_spec.num)
+			{
+			case LAYOUT_FALLTHROUGH:
+				continue;
+			default:
+				break;
+			}
+		}
+		return packet_spec;
+	}
 
-	Layer layer = layer_lookup(0);
-	// todo: check for layout packets (fallthrough, none)
-	return layout_spec[layer][event];
+	PacketSpec empty_packet_spec = {
+	    .type = PACKET_LAYOUT,
+	    .num = LAYOUT_NONE
+	};
+	return empty_packet_spec;
+}
+
+void layout_send(Packet packet)
+{
+	// todo: something when more special packets are added
 }

@@ -22,5 +22,6 @@
 #include "core/event.h"
 
 PacketSpec layout_lookup(Event event);
+void layout_send(Packet packet);
 
 #endif /* CORE_LAYOUT_H_ */
