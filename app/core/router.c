@@ -31,53 +31,56 @@
 
 static void router_task(void *data);
 
-static QueueHandle_t queue_handle = NULL;
-static TaskHandle_t task_handle = NULL;
+static struct
+{
+	QueueHandle_t queue;
+	TaskHandle_t task;
+} router;
 
 void router_init()
 {
-	queue_handle = xQueueCreate(FS_ROUTER_QUEUE_SIZE, sizeof(Packet));
+	router.queue = xQueueCreate(FS_ROUTER_QUEUE_SIZE, sizeof(Packet));
 }
 
 void router_run()
 {
 	// do nothing if running
-	if (task_handle)
+	if (router.task)
 		return;
 
 	// start router task
 	xTaskCreate(router_task, "router_task",
 	            configMINIMAL_STACK_SIZE,
-	            NULL, 1, &task_handle);
+	            NULL, 1, &router.task);
 }
 
 void router_stop()
 {
 	// do nothing if not running
-	if (!task_handle)
+	if (!router.task)
 		return;
 
 	// stop router task
-	vTaskDelete(task_handle);
-	task_handle = NULL;
+	vTaskDelete(router.task);
+	router.task = NULL;
 }
 
 void router_send(Packet packet)
 {
-	xQueueSend(queue_handle, &packet, 0);
+	xQueueSend(router.queue, &packet, 0);
 }
 
 static void router_task(void *data)
 {
 	// start with empty queue
-	xQueueReset(queue_handle);
+	xQueueReset(router.queue);
 
 	// loop this forever
 	while (true)
 	{
 		// wait for packets to enter the queue
 		Packet packet;
-		xQueueReceive(queue_handle, &packet, portMAX_DELAY);
+		xQueueReceive(router.queue, &packet, portMAX_DELAY);
 
 		// route based on packet type
 		switch (packet.spec.type)
