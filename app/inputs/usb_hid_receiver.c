@@ -21,7 +21,7 @@
 #include "osal.h"
 #include "USB.h"
 
-static void task_func(void *data);
+static void usb_hid_receiver_task(void *data);
 
 static USB_HID_HANDLE usb_hid_handle = -1;
 static TaskHandle_t task_handle = NULL;
@@ -41,7 +41,7 @@ void usb_hid_receiver_run(USB_HID_HANDLE usb_handle)
 	usb_hid_handle = usb_handle;
 
 	// start the task
-	xTaskCreate(task_func, "usb_hid_receiver_task",
+	xTaskCreate(usb_hid_receiver_task, "usb_hid_receiver_task",
 	            configMINIMAL_STACK_SIZE,
 	            NULL, 1, &task_handle);
 }
@@ -65,7 +65,7 @@ unsigned usb_hid_receiver_endpoint()
 	return USBD_AddEP(USB_DIR_IN, USB_TRANSFER_TYPE_INT, 0, NULL, 0);
 }
 
-static void task_func(void *data)
+static void usb_hid_receiver_task(void *data)
 {
 	// todo
 	vTaskSuspend(NULL);

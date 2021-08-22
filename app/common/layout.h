@@ -17,10 +17,8 @@
 #ifndef COMMON_LAYOUT_H_
 #define COMMON_LAYOUT_H_
 
-#include "common/hid_codes.h"
+#include "hid_codes.h"
 #include "packet.h"
-
-// todo: can these files be better organized?
 
 enum LayoutCommands
 {

@@ -19,6 +19,7 @@
 
 #include "config.h"
 
+// default HID components
 #ifndef FS_HID_KEYBOARD_BOOT
 #define FS_HID_KEYBOARD_BOOT (1)
 #endif
@@ -35,6 +36,7 @@
 #define FS_HID_CONSUMER      (0)
 #endif
 
+// HID component offsets within the input and output reports
 #define HID_SET_OFFSET(name, offset) HID_OFFSET_ ## name, HID_OFFSET_PADDING_ ## name = HID_OFFSET_ ## name + offset - 1
 enum HID_REPORT_INPUT
 {
@@ -60,6 +62,7 @@ enum HID_REPORT_OUTPUT
 	HID_OUTPUT_REPORT_SIZE,
 };
 
+// standard boot keyboard descriptor
 #if FS_HID_KEYBOARD_BOOT
 #define HID_DESCRIPTOR_KEYBOARD_BOOT \
 	0x05, 0x07,       /* Usage Page (Key Codes) */ \
@@ -87,10 +90,10 @@ enum HID_REPORT_OUTPUT
 #define HID_DESCRIPTOR_KEYBOARD_BOOT
 #endif
 
-#if FS_HID_KEYBOARD_BOOT && FS_HID_KEYBOARD_NKRO
 // neat trick for platforms (BIOS, probably) that only support boot keyboards:
 // under the hood this boot report will still be set but anything that parses
 // descriptors will ignore it, while the basic implementors will only check it.
+#if FS_HID_KEYBOARD_BOOT && FS_HID_KEYBOARD_NKRO
 #undef HID_DESCRIPTOR_KEYBOARD_BOOT
 #define HID_DESCRIPTOR_KEYBOARD_BOOT \
 	0x75, 0x08, /* Report Size (8) */ \
@@ -98,6 +101,7 @@ enum HID_REPORT_OUTPUT
 	0x81, 0x01, /* Input (Constant) */
 #endif
 
+// alternative NKRO HID keyboard component
 #if FS_HID_KEYBOARD_NKRO
 #define HID_DESCRIPTOR_KEYBOARD_NKRO \
 	0x05, 0x07,       /* Usage Page (Key Codes) */ \
@@ -112,6 +116,7 @@ enum HID_REPORT_OUTPUT
 #define HID_DESCRIPTOR_KEYBOARD_NKRO
 #endif
 
+// keyboard leds (like caps lock)
 #if FS_HID_KEYBOARD_LEDS
 #define HID_DESCRIPTOR_KEYBOARD_LEDS \
 	0x05, 0x08, /* Usage Page (LEDs) */ \
@@ -129,6 +134,7 @@ enum HID_REPORT_OUTPUT
 #define HID_DESCRIPTOR_KEYBOARD_LEDS
 #endif
 
+// mouse buttons and controls
 #if FS_HID_MOUSE
 #define HID_DESCRIPTOR_MOUSE \
 	0x05, 0x09, /* Usage Page (Button) */ \
@@ -157,6 +163,7 @@ enum HID_REPORT_OUTPUT
 #define HID_DESCRIPTOR_MOUSE
 #endif
 
+// HID consumer page, has media controls etc.
 // todo: convert this to use 16-bit codes?
 #if FS_HID_CONSUMER
 #define HID_DESCRIPTOR_CONSUMER \
@@ -172,6 +179,7 @@ enum HID_REPORT_OUTPUT
 #define HID_DESCRIPTOR_CONSUMER
 #endif
 
+// HID descriptor used for USB and BLE
 #define HID_DESCRIPTOR {\
 	0x05, 0x01, /* Usage Page (Generic Desktop) */ \
 	0x09, 0x06, /* Usage (Keyboard) */ \

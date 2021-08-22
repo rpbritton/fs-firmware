@@ -20,7 +20,7 @@
 
 #include "common/hid_descriptor.h"
 
-static void task_func(void *data);
+static void usb_hid_sender_task(void *data);
 
 static uint8_t usb_buffer[USB_MAX_PACKET_SIZE];
 
@@ -43,7 +43,7 @@ void usb_hid_sender_run(USB_HID_HANDLE usb_handle)
 	usb_hid_handle = usb_handle;
 
 	// start the task
-	BaseType_t status = xTaskCreate(task_func, "usb_hid_sender_task",
+	BaseType_t status = xTaskCreate(usb_hid_sender_task, "usb_hid_sender_task",
 	                                configMINIMAL_STACK_SIZE,
 	                                NULL, 1, &task_handle);
 }
@@ -76,7 +76,7 @@ void usb_hid_sender_send(uint8_t *report)
 	xQueueOverwrite(queue_handle, report);
 }
 
-static void task_func(void *data)
+static void usb_hid_sender_task(void *data)
 {
 
 	// start with empty queue

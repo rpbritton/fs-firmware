@@ -74,6 +74,7 @@ static bool set_keyboard_boot_keys(Packet packet)
 
 static bool set_keyboard_boot(Packet packet)
 {
+	// set modifiers or keys
 	if (packet.spec.num > 0xE0 && packet.spec.num < 0xE7)
 		return set_keyboard_boot_modifiers(packet);
 	else
@@ -84,12 +85,15 @@ static bool set_keyboard_boot(Packet packet)
 #if FS_HID_KEYBOARD_NKRO
 static bool set_keyboard_nkro(Packet packet)
 {
+	// calculate placement in the bitmap
 	uint8_t index = HID_OFFSET_KEYBOARD_NKRO + packet.spec.num / 8;
 	uint8_t map = (1 << (packet.spec.num % 8));
 
+	// check whether will change
 	if ((report[index] & map) == (packet.state == PACKET_ON))
 		return false;
 
+	// set the bit
 	report[index] ^= map;
 	return true;
 }
@@ -98,9 +102,11 @@ static bool set_keyboard_nkro(Packet packet)
 void hid_sender_keyboard(Packet packet)
 {
 	bool report_changed = false;
+
 #if FS_HID_KEYBOARD_BOOT
 	report_changed |= set_keyboard_boot(packet);
 #endif
+
 #if FS_HID_KEYBOARD_NKRO
 	report_changed |= set_keyboard_nkro(packet);
 #endif
