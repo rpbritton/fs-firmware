@@ -70,7 +70,7 @@ unsigned usb_hid_sender_endpoint()
 
 void usb_hid_sender_send(uint8_t *report)
 {
-	if (usb_hid_handle == -1)
+	if (!queue_handle)
 		return;
 	// todo: how should this work, maybe have a queue of a certain length and block when full?
 	xQueueOverwrite(queue_handle, report);
@@ -78,10 +78,17 @@ void usb_hid_sender_send(uint8_t *report)
 
 static void task_func(void *data)
 {
+
+	// start with empty queue
+	xQueueReset(queue_handle);
+
 	while (true)
 	{
+		// wait for a report
 		uint8_t report[HID_INPUT_REPORT_SIZE];
 		BaseType_t state = xQueueReceive(queue_handle, report, portMAX_DELAY);
+
+		// write the usb report
 		USBD_HID_Write(usb_hid_handle, report, HID_INPUT_REPORT_SIZE, 0);
 	}
 }
