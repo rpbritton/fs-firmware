@@ -23,8 +23,13 @@
 
 static void task_func(void *data);
 
-static USB_HID_HANDLE usb_hid_handle = 0;
+static USB_HID_HANDLE usb_hid_handle = -1;
 static TaskHandle_t task_handle = NULL;
+
+void usb_hid_receiver_init()
+{
+
+}
 
 void usb_hid_receiver_run(USB_HID_HANDLE usb_handle)
 {

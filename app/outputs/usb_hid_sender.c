@@ -28,6 +28,11 @@ static USB_HID_HANDLE usb_hid_handle = -1;
 static QueueHandle_t queue_handle = NULL;
 static TaskHandle_t task_handle = NULL;
 
+void usb_hid_sender_init()
+{
+	queue_handle = xQueueCreate(1, HID_INPUT_REPORT_SIZE);
+}
+
 void usb_hid_sender_run(USB_HID_HANDLE usb_handle)
 {
 	// do nothing if running
@@ -36,9 +41,6 @@ void usb_hid_sender_run(USB_HID_HANDLE usb_handle)
 
 	// set the usb handle
 	usb_hid_handle = usb_handle;
-
-	// create the queue
-	queue_handle = xQueueCreate(1, HID_INPUT_REPORT_SIZE);
 
 	// start the task
 	BaseType_t status = xTaskCreate(task_func, "usb_hid_sender_task",
@@ -55,10 +57,6 @@ void usb_hid_sender_stop()
 	// stop the task
 	vTaskDelete(task_handle);
 	task_handle = NULL;
-
-	// delete the queue
-	vQueueDelete(queue_handle);
-	queue_handle = NULL;
 
 	// unset usb hid handle
 	usb_hid_handle = -1;

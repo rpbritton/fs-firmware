@@ -21,6 +21,7 @@
 
 #include "USB_HID.h"
 
+void usb_hid_receiver_init();
 void usb_hid_receiver_run(USB_HID_HANDLE usb_handle);
 void usb_hid_receiver_stop();
 unsigned usb_hid_receiver_endpoint();

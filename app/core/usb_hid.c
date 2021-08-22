@@ -38,6 +38,12 @@ static const USB_DEVICE_INFO usb_device_info = {
 
 static TaskHandle_t task_handle = NULL;
 
+void usb_hid_init()
+{
+	usb_hid_receiver_init();
+	usb_hid_sender_init();
+}
+
 void usb_hid_run()
 {
 	// do nothing if running

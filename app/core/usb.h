@@ -19,6 +19,8 @@
 
 #if FS_USE_USB
 
+void usb_init();
+
 #endif /* FS_USE_USB */
 
 #endif /* APP_CORE_USB_H_ */

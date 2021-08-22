@@ -27,6 +27,11 @@
 
 static bool usb_is_started = false;
 
+void usb_init()
+{
+	usb_hid_init();
+}
+
 void usb_start_enumeration_cb()
 {
 	if (usb_is_started)

@@ -62,16 +62,16 @@ enum HID_REPORT_OUTPUT
 
 #if FS_HID_KEYBOARD_BOOT
 #define HID_DESCRIPTOR_KEYBOARD_BOOT \
-    0x05, 0x07,       /* Usage Page (Key Codes) */ \
-    0x19, 0xE0,       /* Usage Minimum (0xE0) */ \
-    0x29, 0xE7,       /* Usage Maximum (0xE7) */ \
-    0x15, 0x00,       /* Logical Minimum (0) */ \
-    0x25, 0x01,       /* Logical Maximum (1) */ \
-    0x75, 0x01,       /* Report Size (1) */ \
-    0x95, 0x08,       /* Report Count (8) */ \
-    0x81, 0x02,       /* Input (Data, Variable, Absolute) */ \
-    \
-    0x75, 0x08,       /* Report Size (8) */ \
+	0x05, 0x07,       /* Usage Page (Key Codes) */ \
+	0x19, 0xE0,       /* Usage Minimum (0xE0) */ \
+	0x29, 0xE7,       /* Usage Maximum (0xE7) */ \
+	0x15, 0x00,       /* Logical Minimum (0) */ \
+	0x25, 0x01,       /* Logical Maximum (1) */ \
+	0x75, 0x01,       /* Report Size (1) */ \
+	0x95, 0x08,       /* Report Count (8) */ \
+	0x81, 0x02,       /* Input (Data, Variable, Absolute) */ \
+	\
+	0x75, 0x08,       /* Report Size (8) */ \
 	0x95, 0x01,       /* Report Count (1) */ \
 	0x81, 0x01,       /* Input (Constant) */ \
 	\
@@ -93,46 +93,46 @@ enum HID_REPORT_OUTPUT
 // descriptors will ignore it, while the basic implementors will only check it.
 #undef HID_DESCRIPTOR_KEYBOARD_BOOT
 #define HID_DESCRIPTOR_KEYBOARD_BOOT \
-    0x75, 0x08, /* Report Size (8) */ \
+	0x75, 0x08, /* Report Size (8) */ \
 	0x95, 0x08, /* Report Count (8) */ \
-    0x81, 0x01, /* Input (Constant) */
+	0x81, 0x01, /* Input (Constant) */
 #endif
 
-#if	FS_HID_KEYBOARD_NKRO
+#if FS_HID_KEYBOARD_NKRO
 #define HID_DESCRIPTOR_KEYBOARD_NKRO \
-    0x05, 0x07,       /* Usage Page (Key Codes) */ \
-    0x19, 0x00,       /* Usage Minimum (0x00) */ \
+	0x05, 0x07,       /* Usage Page (Key Codes) */ \
+	0x19, 0x00,       /* Usage Minimum (0x00) */ \
 	0x29, 0xFF,       /* Usage Maximum (0xFF) */ \
-    0x15, 0x00,       /* Logical Minimum (0) */ \
-    0x25, 0x01,       /* Logical Maximum (1) */ \
-    0x75, 0x01,       /* Report Size (1) */ \
+	0x15, 0x00,       /* Logical Minimum (0) */ \
+	0x25, 0x01,       /* Logical Maximum (1) */ \
+	0x75, 0x01,       /* Report Size (1) */ \
 	0x96, 0xFF, 0x00, /* Report Count (255) */ \
-    0x81, 0x02,       /* Input (Data, Variable, Absolute) */
+	0x81, 0x02,       /* Input (Data, Variable, Absolute) */
 #else
 #define HID_DESCRIPTOR_KEYBOARD_NKRO
 #endif
 
-#if	FS_HID_KEYBOARD_LEDS
+#if FS_HID_KEYBOARD_LEDS
 #define HID_DESCRIPTOR_KEYBOARD_LEDS \
-    0x05, 0x08, /* Usage Page (LEDs) */ \
-    0x19, 0x01, /* Usage Minimum (Num Lock) */ \
-    0x29, 0x05, /* Usage Maximum (Kana) */ \
-    0x15, 0x00, /* Logical Minimum (0) */ \
-    0x25, 0x01, /* Logical Maximum (1) */ \
-    0x75, 0x01, /* Report Size (1) */ \
-    0x95, 0x05, /* Report Count (5) */ \
-    0x91, 0x02, /* Output (Data, Variable, Absolute) */ \
-    0x75, 0x01, /* Report Size (1) */ \
+	0x05, 0x08, /* Usage Page (LEDs) */ \
+	0x19, 0x01, /* Usage Minimum (Num Lock) */ \
+	0x29, 0x05, /* Usage Maximum (Kana) */ \
+	0x15, 0x00, /* Logical Minimum (0) */ \
+	0x25, 0x01, /* Logical Maximum (1) */ \
+	0x75, 0x01, /* Report Size (1) */ \
+	0x95, 0x05, /* Report Count (5) */ \
+	0x91, 0x02, /* Output (Data, Variable, Absolute) */ \
+	0x75, 0x01, /* Report Size (1) */ \
 	0x95, 0x03, /* Report Count (3) */ \
 	0x91, 0x01, /* Output (Constant) */
 #else
 #define HID_DESCRIPTOR_KEYBOARD_LEDS
 #endif
 
-#if	FS_HID_MOUSE
+#if FS_HID_MOUSE
 #define HID_DESCRIPTOR_MOUSE \
 	0x05, 0x09, /* Usage Page (Button) */ \
-    0x19, 0x01, /* Usage Minimum (0x01) */ \
+	0x19, 0x01, /* Usage Minimum (0x01) */ \
 	0x29, 0x08, /* Usage Maximum (0x08) */ \
 	0x15, 0x00, /* Logical Minimum (0) */ \
 	0x25, 0x01, /* Logical Maximum (1) */ \
@@ -158,24 +158,24 @@ enum HID_REPORT_OUTPUT
 #endif
 
 // todo: convert this to use 16-bit codes?
-#if	FS_HID_CONSUMER
+#if FS_HID_CONSUMER
 #define HID_DESCRIPTOR_CONSUMER \
 	0x05, 0x0C, /* Usage Page (Consumer) */ \
 	0x19, 0x00, /* Usage Minimum (0x00) */ \
 	0x29, 0xFF, /* Usage Maximum (0xFF) */ \
 	0x15, 0x00, /* Logical Minimum (0xFF) */ \
 	0x25, 0x01, /* Logical Maximum (0xFF) */ \
-    0x75, 0x01, /* Report Size (8) */ \
-    0x95, 0xFF, /* Report Count (4) */ \
-    0x81, 0x02, /* Input (Data, Variable, Absolute) */
+	0x75, 0x01, /* Report Size (8) */ \
+	0x95, 0xFF, /* Report Count (4) */ \
+	0x81, 0x02, /* Input (Data, Variable, Absolute) */
 #else
 #define HID_DESCRIPTOR_CONSUMER
 #endif
 
 #define HID_DESCRIPTOR {\
 	0x05, 0x01, /* Usage Page (Generic Desktop) */ \
-    0x09, 0x06, /* Usage (Keyboard) */ \
-    0xA1, 0x01, /* Collection (Application) */ \
+	0x09, 0x06, /* Usage (Keyboard) */ \
+	0xA1, 0x01, /* Collection (Application) */ \
 	HID_DESCRIPTOR_KEYBOARD_BOOT \
 	HID_DESCRIPTOR_KEYBOARD_NKRO \
 	HID_DESCRIPTOR_KEYBOARD_LEDS \

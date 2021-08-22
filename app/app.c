@@ -18,6 +18,7 @@
 
 #include "core/router.h"
 #include "core/layout.h"
+#include "core/usb.h"
 
 #include "inputs/scanner.h"
 
@@ -35,6 +36,9 @@ void app_init()
 #endif
 #ifdef FS_USE_PRINTER
 	printer_init();
+#endif
+#ifdef FS_USE_USB
+	usb_init();
 #endif
 }
 

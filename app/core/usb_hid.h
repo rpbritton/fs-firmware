@@ -19,6 +19,7 @@
 
 #if FS_USE_USB
 
+void usb_hid_init();
 void usb_hid_run();
 void usb_hid_stop();
 
