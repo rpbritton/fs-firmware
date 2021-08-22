@@ -21,7 +21,10 @@
 #include "common/hid_descriptor.h"
 #include "outputs/usb_hid_sender.h"
 
-uint8_t report[HID_INPUT_REPORT_SIZE];
+static struct
+{
+	uint8_t report[HID_INPUT_REPORT_SIZE];
+} hid_sender;
 
 #if FS_HID_KEYBOARD_BOOT
 static bool set_keyboard_boot_modifiers(Packet packet)
@@ -29,10 +32,10 @@ static bool set_keyboard_boot_modifiers(Packet packet)
 	uint8_t index = HID_OFFSET_KEYBOARD_BOOT;
 	uint8_t map = (1 << (packet.spec.num - 0xE0));
 
-	if ((report[index] & map) == (packet.state == PACKET_ON))
+	if ((hid_sender.report[index] & map) == (packet.state == PACKET_ON))
 		return false;
 
-	report[index] ^= map;
+	hid_sender.report[index] ^= map;
 	return true;
 }
 
@@ -40,12 +43,12 @@ static bool set_keyboard_boot_keys(Packet packet)
 {
 	if (packet.state == PACKET_ON)
 	{
-		// check check report for existing or opening
+		// check report for existing or opening
 		uint8_t free_index = 0;
 		for (uint8_t index = HID_OFFSET_KEYBOARD_BOOT + 2; index < 8; index++)
-			if (report[index] == packet.spec.num)
+			if (hid_sender.report[index] == packet.spec.num)
 				return false;
-			else if (report[index] == 0)
+			else if (hid_sender.report[index] == 0)
 				free_index = index;
 
 		// do nothing if already have 6 keys depressed
@@ -53,7 +56,7 @@ static bool set_keyboard_boot_keys(Packet packet)
 			return false;
 
 		// set key as active
-		report[free_index] = packet.spec.num;
+		hid_sender.report[free_index] = packet.spec.num;
 		return true;
 	}
 	else
@@ -61,9 +64,9 @@ static bool set_keyboard_boot_keys(Packet packet)
 		// search for the code in the report
 		for (uint8_t index = HID_OFFSET_KEYBOARD_BOOT + 2; index < 8; index++)
 		{
-			if (report[index] == packet.spec.num)
+			if (hid_sender.report[index] == packet.spec.num)
 			{
-				report[index] = 0;
+				hid_sender.report[index] = 0;
 				return true;
 			}
 		}
@@ -90,11 +93,11 @@ static bool set_keyboard_nkro(Packet packet)
 	uint8_t map = (1 << (packet.spec.num % 8));
 
 	// check whether will change
-	if ((report[index] & map) == (packet.state == PACKET_ON))
+	if ((hid_sender.report[index] & map) == (packet.state == PACKET_ON))
 		return false;
 
 	// set the bit
-	report[index] ^= map;
+	hid_sender.report[index] ^= map;
 	return true;
 }
 #endif
@@ -130,6 +133,6 @@ void hid_sender_consumer(Packet packet)
 void hid_sender_report()
 {
 #if FS_USE_USB
-	usb_hid_sender_send(report);
+	usb_hid_sender_send(hid_sender.report);
 #endif
 }

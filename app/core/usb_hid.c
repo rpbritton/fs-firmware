@@ -36,7 +36,10 @@ static const USB_DEVICE_INFO usb_device_info = {
     .sSerialNumber = FS_HID_SERIAL_NUMBER,
 };
 
-static TaskHandle_t task_handle = NULL;
+static struct usb_hid
+{
+	TaskHandle_t task;
+} usb_hid;
 
 void usb_hid_init()
 {
@@ -47,24 +50,24 @@ void usb_hid_init()
 void usb_hid_run()
 {
 	// do nothing if running
-	if (task_handle)
+	if (usb_hid.task)
 		return;
 
 	// start usb hid task
 	xTaskCreate(task_func, "usb_hid_task",
 	            configMINIMAL_STACK_SIZE,
-	            NULL, 1, &task_handle);
+	            NULL, 1, &usb_hid.task);
 }
 
 void usb_hid_stop()
 {
 	// do nothing if not running
-	if (!task_handle)
+	if (!usb_hid.task)
 		return;
 
 	// stop usb hid task
-	vTaskDelete(task_handle);
-	task_handle = NULL;
+	vTaskDelete(usb_hid.task);
+	usb_hid.task = NULL;
 
 	// stop usb hid receiver and sender
 	usb_hid_receiver_stop();

@@ -22,74 +22,79 @@
 
 static void usb_hid_sender_task(void *data);
 
-static uint8_t usb_buffer[USB_MAX_PACKET_SIZE];
-
-static USB_HID_HANDLE usb_hid_handle = -1;
-static QueueHandle_t queue_handle = NULL;
-static TaskHandle_t task_handle = NULL;
+static struct
+{
+	uint8_t usb_buffer[USB_MAX_PACKET_SIZE];
+	USB_HID_HANDLE usb_hid;
+	QueueHandle_t queue;
+	TaskHandle_t task;
+} usb_hid_sender = { .usb_hid = -1 };
 
 void usb_hid_sender_init()
 {
-	queue_handle = xQueueCreate(1, HID_INPUT_REPORT_SIZE);
+	usb_hid_sender.queue = xQueueCreate(1, HID_INPUT_REPORT_SIZE);
 }
 
 void usb_hid_sender_run(USB_HID_HANDLE usb_handle)
 {
 	// do nothing if running
-	if (task_handle)
+	if (usb_hid_sender.task)
 		return;
 
 	// set the usb handle
-	usb_hid_handle = usb_handle;
+	usb_hid_sender.usb_hid = usb_handle;
 
 	// start the task
 	BaseType_t status = xTaskCreate(usb_hid_sender_task, "usb_hid_sender_task",
 	                                configMINIMAL_STACK_SIZE,
-	                                NULL, 1, &task_handle);
+	                                NULL, 1, &usb_hid_sender.task);
 }
 
 void usb_hid_sender_stop()
 {
 	// do nothing if not running
-	if (!task_handle)
+	if (!usb_hid_sender.task)
 		return;
 
 	// stop the task
-	vTaskDelete(task_handle);
-	task_handle = NULL;
+	vTaskDelete(usb_hid_sender.task);
+	usb_hid_sender.task = NULL;
 
 	// unset usb hid handle
-	usb_hid_handle = -1;
+	usb_hid_sender.usb_hid = -1;
 }
 
 unsigned usb_hid_sender_endpoint()
 {
-	return USBD_AddEP(USB_DIR_OUT, USB_TRANSFER_TYPE_INT, 0, usb_buffer,
-	                  sizeof(usb_buffer));
+	return USBD_AddEP(USB_DIR_OUT, USB_TRANSFER_TYPE_INT, 0,
+	                  usb_hid_sender.usb_buffer,
+	                  sizeof(usb_hid_sender.usb_buffer));
 }
 
 void usb_hid_sender_send(uint8_t *report)
 {
-	if (!queue_handle)
+	if (!usb_hid_sender.queue)
 		return;
 	// todo: how should this work, maybe have a queue of a certain length and block when full?
-	xQueueOverwrite(queue_handle, report);
+	xQueueOverwrite(usb_hid_sender.queue, report);
 }
 
 static void usb_hid_sender_task(void *data)
 {
 
 	// start with empty queue
-	xQueueReset(queue_handle);
+	xQueueReset(usb_hid_sender.queue);
 
 	while (true)
 	{
 		// wait for a report
 		uint8_t report[HID_INPUT_REPORT_SIZE];
-		BaseType_t state = xQueueReceive(queue_handle, report, portMAX_DELAY);
+		BaseType_t state = xQueueReceive(usb_hid_sender.queue, report,
+		                                 portMAX_DELAY);
 
 		// write the usb report
-		USBD_HID_Write(usb_hid_handle, report, HID_INPUT_REPORT_SIZE, 0);
+		USBD_HID_Write(usb_hid_sender.usb_hid, report, HID_INPUT_REPORT_SIZE,
+		               0);
 	}
 }
 

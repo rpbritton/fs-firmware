@@ -25,7 +25,10 @@
 
 #include "usb_hid.h"
 
-static bool usb_is_started = false;
+static struct
+{
+	bool started;
+} usb;
 
 void usb_init()
 {
@@ -34,9 +37,9 @@ void usb_init()
 
 void usb_start_enumeration_cb()
 {
-	if (usb_is_started)
+	if (usb.started)
 		return;
-	usb_is_started = true;
+	usb.started = true;
 
 	// start usb
 	hw_usb_init();
@@ -48,9 +51,9 @@ void usb_start_enumeration_cb()
 
 void usb_detach_cb()
 {
-	if (!usb_is_started)
+	if (!usb.started)
 		return;
-	usb_is_started = false;
+	usb.started = false;
 
 	// stop usb hid
 	usb_hid_stop();

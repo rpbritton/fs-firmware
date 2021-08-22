@@ -23,8 +23,11 @@
 
 static void usb_hid_receiver_task(void *data);
 
-static USB_HID_HANDLE usb_hid_handle = -1;
-static TaskHandle_t task_handle = NULL;
+static struct
+{
+	USB_HID_HANDLE usb_hid;
+	TaskHandle_t task;
+} usb_hid_receiver = { .usb_hid = -1 };
 
 void usb_hid_receiver_init()
 {
@@ -34,30 +37,30 @@ void usb_hid_receiver_init()
 void usb_hid_receiver_run(USB_HID_HANDLE usb_handle)
 {
 	// do nothing if running
-	if (task_handle)
+	if (usb_hid_receiver.task)
 		return;
 
 	// set the usb handle
-	usb_hid_handle = usb_handle;
+	usb_hid_receiver.usb_hid = usb_handle;
 
 	// start the task
 	xTaskCreate(usb_hid_receiver_task, "usb_hid_receiver_task",
 	            configMINIMAL_STACK_SIZE,
-	            NULL, 1, &task_handle);
+	            NULL, 1, &usb_hid_receiver.task);
 }
 
 void usb_hid_receiver_stop()
 {
 	// do nothing if not running
-	if (!task_handle)
+	if (!usb_hid_receiver.task)
 		return;
 
 	// stop the task
-	vTaskDelete(task_handle);
-	task_handle = NULL;
+	vTaskDelete(usb_hid_receiver.task);
+	usb_hid_receiver.task = NULL;
 
 	// unset usb hid handle
-	usb_hid_handle = 0;
+	usb_hid_receiver.usb_hid = 0;
 }
 
 unsigned usb_hid_receiver_endpoint()
