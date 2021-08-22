@@ -19,7 +19,7 @@
 
 #include "common/packet.h"
 
-#include "core/event.h"
+#include "core/events.h"
 
 PacketSpec layout_lookup(Event event);
 void layout_send(Packet packet);

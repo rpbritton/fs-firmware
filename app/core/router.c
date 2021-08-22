@@ -20,7 +20,7 @@
 #include "osal.h"
 
 #include "core/layout.h"
-#include "core/event.h"
+#include "core/events.h"
 #include "core/layer.h"
 #include "outputs/printer.h"
 #include "outputs/hid_sender.h"
@@ -86,7 +86,7 @@ static void router_task(void *data)
 			layout_send(packet);
 			break;
 		case PACKET_EVENT:
-			event_send(packet);
+			events_send(packet);
 			break;
 		case PACKET_KEYBOARD:
 			hid_sender_keyboard(packet);

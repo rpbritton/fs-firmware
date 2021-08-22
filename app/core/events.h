@@ -21,7 +21,7 @@
 
 typedef uint8_t Event;
 
-void event_refresh();
-void event_send(Packet packet);
+void events_refresh();
+void events_send(Packet packet);
 
 #endif /* APP_CORE_EVENT_H_ */

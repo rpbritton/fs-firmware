@@ -18,7 +18,7 @@
 
 #include "config.h"
 
-#include "core/event.h"
+#include "core/events.h"
 
 typedef struct LayerState
 {
@@ -44,7 +44,7 @@ void layer_refresh()
 		return;
 
 	active_layer = new_active_layer;
-	event_refresh();
+	events_refresh();
 }
 
 Layer layer_lookup()
