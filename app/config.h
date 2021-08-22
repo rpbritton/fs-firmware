@@ -18,7 +18,7 @@
 #define APP_CONFIG_H_
 
 // scanner config
-#ifdef FS_USE_SCANNER
+#if FS_USE_SCANNER
 #define FS_SCANNER_NUM_ROWS    (3)
 #define FS_SCANNER_NUM_COLUMNS (3)
 #define FS_SCANNER_ROWS        {0x34, 0x33, 0x45}
@@ -32,8 +32,8 @@
 #define FS_EVENT_NUM (9)
 #define FS_LAYOUT_SPEC {                               \
 	{                                                  \
-		KB_A, KB_B, KB_C,                              \
-		KB_D, KB_E, KB_F,                              \
+		KB_LSHIFT, KB_B, KB_C,                         \
+		KP_LPAREN, KB_E, KB_F,                         \
 		{.type = PACKET_LAYER, .num = 1}, KB_H, KB_I,  \
 	},	{                                              \
 		KB_1, KB_2, KB_3,                              \
@@ -41,5 +41,18 @@
 		{.type = PACKET_LAYER, .num = 1}, KB_8, _____, \
 	},                                                 \
 }
+
+// hid config
+#define FS_HID_VENDOR_ID     (0x89F9)
+#define FS_HID_PRODUCT_ID    (0x894A)
+#define FS_HID_VENDOR_NAME   ("Ryan Britton")
+#define FS_HID_PRODUCT_NAME  ("FS Keyboard Controller")
+#define FS_HID_SERIAL_NUMBER ("12345678")
+
+#define FS_HID_KEYBOARD_BOOT (1)
+#define FS_HID_KEYBOARD_NKRO (1)
+#define FS_HID_KEYBOARD_LEDS (0)
+#define FS_HID_CONSUMER      (0)
+#define FS_HID_MOUSE         (0)
 
 #endif /* APP_CONFIG_H_ */

@@ -14,21 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef COMMON_LAYOUT_H_
-#define COMMON_LAYOUT_H_
+#include "hid_receiver.h"
 
-#include "common/hid_codes.h"
-#include "packet.h"
+#include "common/hid_descriptor.h"
 
-// todo: can these files be better organized?
-
-enum LayoutCommands
-{
-	LAYOUT_NONE,
-	LAYOUT_FALLTHROUGH,
-};
-
-#define _XXX_ { .type = PACKET_LAYOUT, .num = LAYOUT_NONE }
-#define _____ { .type = PACKET_LAYOUT, .num = LAYOUT_FALLTHROUGH }
-
-#endif /* COMMON_LAYOUT_H_ */
+//uint8_t report[HID_OUTPUT_REPORT_SIZE];

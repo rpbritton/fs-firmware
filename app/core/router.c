@@ -23,6 +23,7 @@
 #include "core/event.h"
 #include "core/layer.h"
 #include "outputs/printer.h"
+#include "outputs/hid_sender.h"
 
 #ifndef FS_ROUTER_QUEUE_SIZE
 #define FS_ROUTER_QUEUE_SIZE (20)
@@ -44,9 +45,9 @@ void router_run()
 	if (task_handle)
 		return;
 
-	// stop router task
+	// start router task
 	xTaskCreate(router_task, "router_task",
-	            configMINIMAL_STACK_SIZE * sizeof(StackType_t),
+	            configMINIMAL_STACK_SIZE,
 	            NULL, 1, &task_handle);
 }
 
@@ -84,17 +85,20 @@ static void router_task(void *data)
 		case PACKET_LAYOUT:
 			layout_send(packet);
 			break;
-		case PACKET_HID:
-			printer_send(packet);
-			break;
 		case PACKET_EVENT:
 			event_send(packet);
 			break;
+		case PACKET_KEYBOARD:
+			hid_sender_keyboard(packet);
+			break;
+		case PACKET_MOUSE:
+			hid_sender_mouse(packet);
+			break;
+		case PACKET_CONSUMER:
+			hid_sender_consumer(packet);
+			break;
 		case PACKET_LAYER:
 			layer_send(packet);
-			break;
-		default:
-			printer_send(packet);
 			break;
 		}
 	}

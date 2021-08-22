@@ -14,21 +14,14 @@
  * limitations under the License.
  */
 
-#ifndef COMMON_LAYOUT_H_
-#define COMMON_LAYOUT_H_
+#ifndef APP_OUTPUTS_HID_SENDER_H_
+#define APP_OUTPUTS_HID_SENDER_H_
 
-#include "common/hid_codes.h"
-#include "packet.h"
+#include "common/packet.h"
 
-// todo: can these files be better organized?
+void hid_sender_keyboard(Packet packet);
+void hid_sender_mouse(Packet packet);
+void hid_sender_consumer(Packet packet);
+void hid_sender_report();
 
-enum LayoutCommands
-{
-	LAYOUT_NONE,
-	LAYOUT_FALLTHROUGH,
-};
-
-#define _XXX_ { .type = PACKET_LAYOUT, .num = LAYOUT_NONE }
-#define _____ { .type = PACKET_LAYOUT, .num = LAYOUT_FALLTHROUGH }
-
-#endif /* COMMON_LAYOUT_H_ */
+#endif /* APP_OUTPUTS_HID_SENDER_H_ */

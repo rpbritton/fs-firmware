@@ -14,21 +14,14 @@
  * limitations under the License.
  */
 
-#ifndef COMMON_LAYOUT_H_
-#define COMMON_LAYOUT_H_
+#ifndef APP_CORE_HID_H_
+#define APP_CORE_HID_H_
 
-#include "common/hid_codes.h"
-#include "packet.h"
+#include "osal.h"
 
-// todo: can these files be better organized?
+#include "common/hid_descriptor.h"
 
-enum LayoutCommands
-{
-	LAYOUT_NONE,
-	LAYOUT_FALLTHROUGH,
-};
+const uint8_t* hid_descriptor();
+uint16_t hid_descriptor_size();
 
-#define _XXX_ { .type = PACKET_LAYOUT, .num = LAYOUT_NONE }
-#define _____ { .type = PACKET_LAYOUT, .num = LAYOUT_FALLTHROUGH }
-
-#endif /* COMMON_LAYOUT_H_ */
+#endif /* APP_CORE_HID_H_ */
