@@ -85,7 +85,7 @@ void scanner_run()
 
 	// stop router task
 	xTaskCreate(scanner_task, "scanner_task",
-	            configMINIMAL_STACK_SIZE * sizeof(StackType_t),
+	            configMINIMAL_STACK_SIZE,
 	            NULL, 1, &task_handle);
 }
 

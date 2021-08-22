@@ -33,7 +33,7 @@ int main(void)
 
 	TaskHandle_t handle;
 	xTaskCreate(system_init, "system_init",
-	            configMINIMAL_STACK_SIZE * sizeof(StackType_t),
+	            configMINIMAL_STACK_SIZE,
 	            NULL,
 	            configMAX_PRIORITIES - 1,
 	            &handle);
@@ -43,7 +43,7 @@ int main(void)
 
 static void system_init(void *data)
 {
-	cm_sys_clk_init(sysclk_XTAL16M);
+	cm_sys_clk_init(sysclk_PLL96);
 	cm_apb_set_clock_divider(apb_div1);
 	cm_ahb_set_clock_divider(ahb_div1);
 	cm_lp_clk_init();

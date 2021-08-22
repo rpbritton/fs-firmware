@@ -50,7 +50,7 @@ void blinky_run()
 		return;
 
 	xTaskCreate(blinky_task, "blinky_task",
-	            configMINIMAL_STACK_SIZE * sizeof(StackType_t),
+	            configMINIMAL_STACK_SIZE,
 	            NULL, 1, &task_handle);
 }
 

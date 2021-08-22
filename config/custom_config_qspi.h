@@ -57,6 +57,13 @@
 #define FS_USE_BLINKY  (1)
 #define FS_USE_PRINTER (1)
 
+// usb config
+#define dg_configUSE_USB             (1)
+#define dg_configUSE_HW_USB        	 (1)
+#define dg_configUSE_USB_ENUMERATION (1)
+#define USB_SUPPORT_HIGH_SPEED       (0)
+#define FS_USE_USB                   (1)
+
 #include "bsp_defaults.h"
 #include "bsp_memory_layout.h"
 
