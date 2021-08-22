@@ -21,7 +21,7 @@
 
 #include "core/layout.h"
 #include "core/events.h"
-#include "core/layer.h"
+#include "core/layers.h"
 #include "outputs/printer.h"
 #include "outputs/hid_sender.h"
 
@@ -98,7 +98,7 @@ static void router_task(void *data)
 			hid_sender_consumer(packet);
 			break;
 		case PACKET_LAYER:
-			layer_send(packet);
+			layers_send(packet);
 			break;
 		}
 	}

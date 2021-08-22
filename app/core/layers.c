@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "layer.h"
+#include "layers.h"
 
 #include "config.h"
 
@@ -25,34 +25,37 @@ typedef struct LayerState
 	uint8_t activations;
 } LayerState;
 
-LayerState layer_states[FS_LAYER_NUM];
-Layer active_layer = 0;
+struct
+{
+	LayerState states[FS_LAYER_NUM];
+	Layer active;
+} layers;
 
-void layer_refresh()
+void layers_refresh()
 {
 	Layer new_active_layer = 0;
 	for (Layer layer = FS_LAYER_NUM; layer > 0; layer--)
 	{
-		if (layer_states[layer].activations > 0)
+		if (layers.states[layer].activations > 0)
 		{
 			new_active_layer = layer;
 			break;
 		}
 	}
 
-	if (new_active_layer == active_layer)
+	if (new_active_layer == layers.active)
 		return;
 
-	active_layer = new_active_layer;
+	layers.active = new_active_layer;
 	events_refresh();
 }
 
-Layer layer_lookup()
+Layer layers_lookup()
 {
-	return active_layer;
+	return layers.active;
 }
 
-void layer_send(Packet packet)
+void layers_send(Packet packet)
 {
 	Layer layer = packet.spec.num;
 	if (layer >= FS_LAYER_NUM)
@@ -61,21 +64,21 @@ void layer_send(Packet packet)
 	if (packet.state == PACKET_ON)
 	{
 		// increase the activations
-		layer_states[layer].activations++;
+		layers.states[layer].activations++;
 
 		// reevaluate active layer
-		if (layer > active_layer)
-			layer_refresh();
+		if (layer > layers.active)
+			layers_refresh();
 	}
 	else
 	{
 		// decrease the activations
-		if (layer_states[layer].activations == 0)
+		if (layers.states[layer].activations == 0)
 			return;
-		layer_states[layer].activations--;
+		layers.states[layer].activations--;
 
 		// reevaluate active layer
-		if (layer == active_layer && layer_states[layer].activations == 0)
-			layer_refresh();
+		if (layer == layers.active && layers.states[layer].activations == 0)
+			layers_refresh();
 	}
 }

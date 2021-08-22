@@ -18,7 +18,7 @@
 
 #include "config.h"
 #include "core/router.h"
-#include "core/layer.h"
+#include "core/layers.h"
 
 const PacketSpec layout_spec[FS_LAYER_NUM][FS_EVENT_NUM] =
 FS_LAYOUT_SPEC;
@@ -26,7 +26,7 @@ FS_LAYOUT_SPEC;
 PacketSpec layout_lookup(Event event)
 {
 	// find the event's packet spec
-	for (Layer layer = layer_lookup(); layer >= 0; layer--)
+	for (Layer layer = layers_lookup(); layer >= 0; layer--)
 	{
 		PacketSpec packet_spec = layout_spec[layer][event];
 		// process special layout packets here
