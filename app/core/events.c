@@ -26,7 +26,7 @@ typedef struct EventState
 	PacketSpec spec;
 } EventState;
 
-struct
+static struct
 {
 	EventState states[FS_EVENT_NUM];
 } events;

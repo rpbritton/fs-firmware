@@ -17,7 +17,6 @@
 #include "layers.h"
 
 #include "config.h"
-
 #include "core/events.h"
 
 typedef struct LayerState
@@ -25,7 +24,7 @@ typedef struct LayerState
 	uint8_t activations;
 } LayerState;
 
-struct
+static struct
 {
 	LayerState states[FS_LAYER_NUM];
 	Layer active;
@@ -34,7 +33,7 @@ struct
 void layers_refresh()
 {
 	Layer new_active_layer = 0;
-	for (Layer layer = FS_LAYER_NUM; layer > 0; layer--)
+	for (Layer layer = FS_LAYER_NUM - 1; layer > 0; layer--)
 	{
 		if (layers.states[layer].activations > 0)
 		{
