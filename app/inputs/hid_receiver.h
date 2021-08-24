@@ -17,6 +17,8 @@
 #ifndef APP_INPUTS_HID_RECEIVER_H_
 #define APP_INPUTS_HID_RECEIVER_H_
 
+#include "osal.h"
 
+void hid_receiver_send(uint8_t *report);
 
 #endif /* APP_INPUTS_HID_RECEIVER_H_ */

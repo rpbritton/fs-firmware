@@ -24,7 +24,7 @@
 #define FS_HID_KEYBOARD_BOOT (1)
 #endif
 #ifndef FS_HID_KEYBOARD_NKRO
-#define FS_HID_KEYBOARD_NKRO (1)
+#define FS_HID_KEYBOARD_NKRO (0)
 #endif
 #ifndef FS_HID_KEYBOARD_LEDS
 #define FS_HID_KEYBOARD_LEDS (1)
@@ -127,6 +127,7 @@ enum HID_REPORT_OUTPUT
 	0x75, 0x01, /* Report Size (1) */ \
 	0x95, 0x05, /* Report Count (5) */ \
 	0x91, 0x02, /* Output (Data, Variable, Absolute) */ \
+	\
 	0x75, 0x01, /* Report Size (1) */ \
 	0x95, 0x03, /* Report Count (3) */ \
 	0x91, 0x01, /* Output (Constant) */
@@ -145,6 +146,7 @@ enum HID_REPORT_OUTPUT
 	0x75, 0x01, /* Report Size (1) */ \
 	0x95, 0x08, /* Report Count (8) */ \
 	0x81, 0x02, /* Input (Data, Variable, Absolute) */ \
+	\
 	0x05, 0x01, /* Usage Page (Generic Desktop Ctrls) */ \
 	0x09, 0x30, /* Usage (X) */ \
 	0x09, 0x31, /* Usage (Y) */ \
@@ -153,6 +155,7 @@ enum HID_REPORT_OUTPUT
 	0x75, 0x08, /* Report Size (8) */ \
 	0x95, 0x02, /* Report Count (2) */ \
 	0x81, 0x06, /* Input (Data, Variable, Absolute) */ \
+	\
 	0x09, 0x38, /* Usage (Wheel) */ \
 	0x15, 0x80, /* Logical Minimum (-128) */ \
 	0x25, 0x7F, /* Logical Maximum (127) */ \

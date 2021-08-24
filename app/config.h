@@ -29,16 +29,18 @@
 // layout config
 #include "common/layout.h"
 #define FS_LAYER_NUM (2)
-#define FS_EVENT_NUM (9)
+#define FS_EVENT_NUM (10)
 #define FS_LAYOUT_SPEC {                               \
 	{                                                  \
-		KB_LSHIFT, KB_B, KB_C,                         \
+		KB_LSHIFT, KB_CLCK, KB_C,                      \
 		KP_LPAREN, KB_E, KB_F,                         \
 		{.type = PACKET_LAYER, .num = 1}, KB_H, KB_I,  \
+		_XXX_,                                         \
 	},	{                                              \
 		KB_1, KB_2, KB_3,                              \
 		KB_4, KB_5, KB_6,                              \
 		{.type = PACKET_LAYER, .num = 1}, KB_8, _____, \
+		_XXX_,	                                       \
 	},                                                 \
 }
 
@@ -51,8 +53,12 @@
 
 #define FS_HID_KEYBOARD_BOOT (1)
 #define FS_HID_KEYBOARD_NKRO (1)
-#define FS_HID_KEYBOARD_LEDS (0)
+#define FS_HID_KEYBOARD_LEDS (1)
 #define FS_HID_CONSUMER      (0)
 #define FS_HID_MOUSE         (0)
+
+#if FS_HID_KEYBOARD_LEDS
+#define FS_HID_LED_CAPS_LOCK (9)
+#endif
 
 #endif /* APP_CONFIG_H_ */

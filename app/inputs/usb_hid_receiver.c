@@ -21,6 +21,9 @@
 #include "osal.h"
 #include "USB.h"
 
+#include "common/hid_descriptor.h"
+#include "inputs/hid_receiver.h"
+
 static void usb_hid_receiver_task(void *data);
 
 static struct
@@ -60,7 +63,7 @@ void usb_hid_receiver_stop()
 	usb_hid_receiver.task = NULL;
 
 	// unset usb hid handle
-	usb_hid_receiver.usb_hid = 0;
+	usb_hid_receiver.usb_hid = -1;
 }
 
 unsigned usb_hid_receiver_endpoint()
@@ -70,8 +73,15 @@ unsigned usb_hid_receiver_endpoint()
 
 static void usb_hid_receiver_task(void *data)
 {
-	// todo
-	vTaskSuspend(NULL);
+	while (true)
+	{
+		uint8_t report[HID_OUTPUT_REPORT_SIZE];
+		USBD_HID_Read(usb_hid_receiver.usb_hid,
+		              report,
+		              HID_OUTPUT_REPORT_SIZE,
+		              0);
+		hid_receiver_send(report);
+	}
 }
 
 #endif /* FS_USE_USB */

@@ -34,6 +34,8 @@ static struct
 void events_send(Packet packet)
 {
 	Event event = packet.spec.num;
+	if (event > FS_EVENT_NUM)
+		return;
 
 	// save the event state
 	if (packet.state == PACKET_ON)

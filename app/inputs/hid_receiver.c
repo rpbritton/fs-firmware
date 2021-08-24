@@ -17,7 +17,61 @@
 #include "hid_receiver.h"
 
 #include "common/hid_descriptor.h"
+#include "core/router.h"
 
-//uint8_t report[HID_OUTPUT_REPORT_SIZE];
+#ifndef FS_HID_LED_NUM_LOCK
+#define FS_HID_LED_NUM_LOCK (-1)
+#endif
 
-// todo
+#ifndef FS_HID_LED_CAPS_LOCK
+#define FS_HID_LED_CAPS_LOCK (-1)
+#endif
+
+#ifndef FS_HID_LED_SCROLL_LOCK
+#define FS_HID_LED_SCROLL_LOCK (-1)
+#endif
+
+#ifndef FS_HID_LED_COMPOSE
+#define FS_HID_LED_COMPOSE (-1)
+#endif
+
+#ifndef FS_HID_LED_KANA
+#define FS_HID_LED_KANA (-1)
+#endif
+
+static const uint8_t hid_led_events[5] = {
+FS_HID_LED_NUM_LOCK,
+FS_HID_LED_CAPS_LOCK,
+FS_HID_LED_SCROLL_LOCK,
+FS_HID_LED_COMPOSE,
+FS_HID_LED_KANA,
+};
+
+static struct
+{
+	uint8_t leds;
+} hid_receiver;
+
+static void hid_receiver_leds(uint8_t *report)
+{
+	uint8_t leds = report[HID_OFFSET_KEYBOARD_LEDS];
+	for (int index = 0; index < 5; index++)
+	{
+		bool current_state = !!(leds & (1 << index));
+		bool previous_state = !!(hid_receiver.leds & (1 << index));
+		if (current_state == previous_state)
+			continue;
+
+		Packet packet;
+		packet.state = (current_state) ? PACKET_ON : PACKET_OFF;
+		packet.spec.type = PACKET_EVENT;
+		packet.spec.num = hid_led_events[index];
+		router_send(packet);
+	}
+	hid_receiver.leds = leds;
+}
+
+void hid_receiver_send(uint8_t *report)
+{
+	hid_receiver_leds(report);
+}
